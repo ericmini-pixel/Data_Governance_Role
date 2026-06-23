@@ -37,6 +37,127 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-famil
 
 /* shared pill */
 .pill{display:inline-block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;padding:.28rem .9rem;border-radius:100px;border:1px solid;font-weight:600}
+
+/* ═══════════════════════════════════════════
+   MOBILE: vertical scrollable layout
+═══════════════════════════════════════════ */
+@media (max-width: 767px) {
+  html, body { overflow: auto; height: auto; background: #1a3a8f; }
+
+  .deck { height: auto; position: relative; }
+
+  .slide {
+    position: relative !important;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: all !important;
+    min-height: 100svh;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column;
+    overflow: visible !important;
+    border-bottom: 2px solid rgba(255,255,255,.08);
+  }
+
+  /* always show all slides on mobile */
+  .slide { opacity: 1 !important; }
+
+  /* nav: simplified dot-only bar, no prev/next needed */
+  .nav { display: none; }
+
+  /* background SVGs: keep but make non-interactive */
+  .bg { pointer-events: none; }
+
+  /* slide-number watermark */
+  .slide::before {
+    content: attr(data-slide) " / 7";
+    position: absolute;
+    top: 12px; right: 16px;
+    font-size: .65rem;
+    color: rgba(255,255,255,.3);
+    letter-spacing: .14em;
+    z-index: 10;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── Slide 1: stack vertically ── */
+  .s1-body, [style*="display:flex;width:100%;height:100%"] {
+    flex-direction: column !important;
+    height: auto !important;
+  }
+
+  /* ── Force all horizontal flex rows to wrap ── */
+  [style*="display:flex;gap:1.6rem"][style*="margin-top"],
+  [style*="display:flex;gap:1.4rem"],
+  [style*="display:flex;gap:1.2rem"],
+  [style*="display:flex;gap:1rem"],
+  [style*="display:flex;gap:.8rem"] {
+    flex-wrap: wrap;
+  }
+
+  /* Honeycomb SVG: full width */
+  #honeycomb, svg[id="honeycomb"] {
+    width: 100% !important;
+    max-height: none !important;
+  }
+
+  /* reveal animations: skip on mobile */
+  .rev {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Extra small phones */
+@media (max-width: 480px) {
+  .slide { padding-bottom: 1.5rem; }
+}
+
+@media (max-width: 767px) {
+  /* Slide 1: left/right panels stack */
+  [style*="width:47%"], [style*="width:53%"] {
+    width: 100% !important;
+    border-left: none !important;
+    padding: 1.5rem 5% !important;
+  }
+
+  /* Slide 5: flow chain wraps to 2 rows */
+  [style*="min-width:clamp(90px"] {
+    min-width: 80px !important;
+  }
+
+  /* Slide 6: left/right split stacks */
+  [style*="width:34%"] {
+    width: 100% !important;
+    padding: 1.5rem 5% !important;
+  }
+
+  /* Slide 2 honeycomb: shrink to fit */
+  [viewBox="185 -65 610 690"] {
+    width: 100% !important;
+    max-height: 55vh !important;
+  }
+
+  /* All 3-column rows: stack on mobile */
+  [style*="flex:1;display:flex;flex-direction:column;align-items:center;padding:0 1.2%"] {
+    min-width: 100% !important;
+    padding: 1rem 5% !important;
+    border-left: none !important;
+    border-top: 1px solid rgba(255,255,255,.08) !important;
+  }
+
+  /* Slide 4 two cards: stack */
+  [style*="max-width:860px"] {
+    flex-direction: column !important;
+  }
+
+  /* reduce big headline fonts on mobile */
+  [style*="font-size:clamp(3rem"] { font-size: 2.2rem !important; }
+  [style*="font-size:clamp(3.5rem"] { font-size: 2rem !important; }
+  [style*="font-size:clamp(2rem,4vw"] { font-size: 1.8rem !important; }
+}
+
 </style>
 </head>
 <body>
@@ -692,7 +813,9 @@ for(let i=1;i<=total;i++){
   d.onclick=()=>jump(i);
   dotsEl.appendChild(d);
 }
+const isMobile=()=>window.innerWidth<768;
 function jump(n){
+  if(isMobile()) return;
   slides.forEach(s=>s.classList.remove('active'));
   const sl=document.querySelector('[data-slide="'+n+'"]');
   if(sl){sl.classList.add('active');animate(sl);}
@@ -700,7 +823,7 @@ function jump(n){
   document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i+1===n));
   nc.textContent=n+' / '+total;
 }
-function go(d){let n=cur+d;if(n<1)n=total;if(n>total)n=1;jump(n);}
+function go(d){if(isMobile()) return; let n=cur+d;if(n<1)n=total;if(n>total)n=1;jump(n);}
 function animate(sl){
   sl.querySelectorAll('.rev').forEach((el,i)=>{
     el.style.transition='none';el.style.opacity='0';el.style.transform='translateY(18px)';
@@ -715,9 +838,9 @@ document.addEventListener('keydown',e=>{
   if(e.key==='ArrowLeft'){e.preventDefault();go(-1);}
 });
 let tx=0;
-document.addEventListener('touchstart',e=>tx=e.touches[0].clientX);
-document.addEventListener('touchend',e=>{const d=tx-e.changedTouches[0].clientX;if(Math.abs(d)>50)go(d>0?1:-1);});
-animate(document.querySelector('.slide.active'));
+document.addEventListener('touchstart',e=>{if(!isMobile())tx=e.touches[0].clientX;});
+document.addEventListener('touchend',e=>{if(!isMobile()){const d=tx-e.changedTouches[0].clientX;if(Math.abs(d)>50)go(d>0?1:-1);}});
+if(isMobile()){slides.forEach(s=>animate(s));}else{animate(document.querySelector('.slide.active'));}
 </script>
 </body>
 </html>
