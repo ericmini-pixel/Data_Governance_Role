@@ -131,63 +131,107 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-famil
     max-height: 52vh !important;
   }
 
-  /* ── Slide 3: 3 columns → each becomes a horizontal row (icon left, text right) ── */
-  #s3 [style*="flex:1;display:flex;flex-direction:column;align-items:center"] {
+  /* ── Slide 3: stack columns vertically, each as a row ── */
+  #s3 { min-height: auto !important; height: auto !important; padding-bottom: 4rem; }
+
+  /* quotes row: stack on mobile */
+  #s3 .s3-quotes {
+    flex-direction: column !important;
+    padding: .6rem 4% !important;
+    gap: .6rem !important;
+  }
+  #s3 .s3-quotes > div { max-width: 100% !important; }
+
+  /* columns container: vertical stack */
+  #s3 .s3-cols {
+    flex-direction: column !important;
+    padding: .4rem 0 1rem !important;
+    gap: 0 !important;
+  }
+
+  /* each column: horizontal row layout */
+  #s3 .s3-col {
     flex-direction: row !important;
     align-items: flex-start !important;
     width: 100% !important;
-    padding: .9rem 5% !important;
-    border-left: none !important;
-    border-top: 1px solid rgba(255,255,255,.07) !important;
+    padding: 1rem 5% !important;
     gap: 1rem !important;
+    border-top: 1px solid rgba(255,255,255,.07) !important;
+    min-width: unset !important;
   }
-  /* circle icon keeps its size, text block fills right */
-  #s3 [style*="position:relative;margin-bottom:1rem"] {
+
+  /* circle icon: fixed size, don't shrink */
+  #s3 .s3-icon-wrap {
     flex-shrink: 0 !important;
     margin-bottom: 0 !important;
+    width: clamp(72px,18vw,90px) !important;
+    height: clamp(72px,18vw,90px) !important;
   }
-  /* hide outer dashed ring on mobile to save space */
-  #s3 [style*="position:absolute;inset:-14px"] { display: none !important; }
-  /* text block fills remaining width */
-  #s3 [style*="width:40px;height:2.5px"] { display: none !important; }
-  /* dividers between columns: hidden */
-  #s3 [style*="width:1px;background:rgba(255,255,255,.08)"] { display: none !important; }
-  /* flow arrow SVG: hide on mobile */
-  #s3 svg[style*="position:absolute;top:72px"] { display: none !important; }
-  /* columns container: wrap */
-  #s3 [style*="flex:1;display:flex;align-items:stretch;padding"] {
-    flex-direction: column !important;
-    gap: 0 !important;
+  #s3 .s3-icon-wrap > div:first-child {
+    width: 100% !important;
+    height: 100% !important;
   }
+
+  /* text block fills remaining space */
+  #s3 .s3-text { flex: 1 !important; min-width: 0 !important; }
+
+  /* hide dashed ring, divider line, flow arrows on mobile */
+  #s3 .s3-ring,
+  #s3 .s3-divider,
+  #s3 .s3-ruler,
+  #s3 .s3-flow-svg { display: none !important; }
+  /* s3-col children after icon: fill remaining width */
+  #s3 .s3-col > *:not(.s3-icon-wrap) {
+    text-align: left !important;
+    width: 100% !important;
+  }
+  /* badge number: reposition relative to icon */
+  #s3 .s3-icon-wrap > [style*="position:absolute;top:-8px"] {
+    position: absolute !important;
+  }
+
 
   /* ── Slide 4: cards stack ── */
   #s4 [style*="max-width:860px"] { flex-direction: column !important; }
 
-  /* ── Slide 5: flow chain wraps, cards stack like pillars ── */
-  #s5 [style*="display:flex;align-items:center;justify-content:center;padding:1.8rem"] {
-    flex-wrap: wrap !important;
-    gap: .4rem .2rem !important;
-    justify-content: center !important;
+  /* ── Slide 5: flow chain — 2-row grid, no clipping ── */
+  #s5 .flow-chain {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: .6rem .2rem !important;
+    padding: .8rem 4% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
-  #s5 [style*="min-width:clamp(90px"] {
-    min-width: 72px !important;
-    max-width: 90px !important;
+  /* hide arrow separators on mobile */
+  #s5 .flow-arrow { display: none !important; }
+  /* each icon cell */
+  #s5 .flow-item {
+    min-width: unset !important;
+    max-width: unset !important;
+    width: 100% !important;
   }
-  /* cards: stack vertically, each row = icon+title left, text right */
-  #s5 [style*="display:flex;gap:1.2rem"] {
+  #s5 .flow-item > div:first-child {
+    width: clamp(56px,13vw,72px) !important;
+    height: clamp(56px,13vw,72px) !important;
+    font-size: 1.5rem !important;
+  }
+  #s5 .flow-item > div:last-child {
+    font-size: .68rem !important;
+  }
+  /* cards: stack vertically */
+  #s5 .cards-row {
     flex-direction: column !important;
     gap: 0 !important;
+    padding: 0 !important;
   }
-  #s5 [style*="border-left:4px solid #43e8ff"],
-  #s5 [style*="border-left:4px solid #a78bfa"],
-  #s5 [style*="border-left:4px solid #10b981"] {
+  #s5 .card-item {
     border-radius: 0 !important;
+    border-left-width: 4px !important;
     border-bottom: 1px solid rgba(255,255,255,.07) !important;
-    padding: .8rem 5% !important;
+    padding: .85rem 5% !important;
   }
-  #s5 [style*="display:flex;align-items:center;gap:.5rem"] {
-    margin-bottom: .25rem !important;
-  }
+  #s5 .card-item:last-child { border-bottom: none !important; }
 
   /* ── Slide 6: already stacks well, minor padding tweak ── */
   #s6 [style*="width:34%"] {
@@ -231,9 +275,9 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-famil
     <ellipse cx="720"  cy="420" rx="380" ry="260" fill="url(#b3_c)"/>
     <path d="M-60,180 Q420,100 880,200 T1500,140" stroke="#43e8ff" stroke-width="1" fill="none" opacity=".12"/>
     <path d="M-60,640 Q420,560 880,660 T1500,600" stroke="#a78bfa" stroke-width=".8" fill="none" opacity=".1"/>
-    <polygon points="0,0 660,0 550,810 0,810" fill="#1a6aff" opacity=".09"/>
-  <polygon points="660,0 682,0 572,810 550,810" fill="#43e8ff" opacity=".55"/>
-  <polygon points="698,0 703,0 593,810 588,810" fill="#1a6aff" opacity=".2"/>
+    <polygon points="0,0 790,0 680,810 0,810" fill="#1a6aff" opacity=".09"/>
+  <polygon points="790,0 812,0 702,810 680,810" fill="#43e8ff" opacity=".55"/>
+  <polygon points="828,0 833,0 723,810 718,810" fill="#1a6aff" opacity=".2"/>
   <polygon points="1440,0 1440,200 1220,0" fill="#1a6aff" opacity=".07"/>
   <path d="M1220,0 L1440,200" stroke="#43e8ff" stroke-width="1.2" opacity=".25"/>
   <g fill="#43e8ff" opacity=".18">
@@ -428,7 +472,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-famil
   </div>
 
   <!-- QUOTE ROW -->
-  <div class="z2 rev" style="display:flex;gap:1.2rem;padding:.8rem 3% .6rem;justify-content:center">
+  <div class="z2 rev s3-quotes" style="display:flex;gap:1.2rem;padding:.8rem 3% .6rem;justify-content:center">
     <div style="flex:1;max-width:500px;background:rgba(67,232,255,.07);border:1px solid rgba(67,232,255,.22);border-radius:12px;padding:.7rem 1.1rem;border-left:3px solid #43e8ff">
       <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.18em;color:#43e8ff;margin-bottom:.2rem">Google</div>
       <div style="font-size:.9rem;color:rgba(255,255,255,.78);line-height:1.5;font-style:italic">"…everything you do to ensure data is secure, private, accurate, available, and usable…"</div>
@@ -440,10 +484,10 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-famil
   </div>
 
   <!-- 3 COLUMNS — big and readable -->
-  <div class="z2" style="flex:1;display:flex;align-items:stretch;padding:1.2rem 2% 3rem;gap:1.2rem;position:relative">
+  <div class="z2 s3-cols" style="flex:1;display:flex;align-items:stretch;padding:1.2rem 2% 3rem;gap:1.2rem;position:relative">
 
     <!-- flow arrow row above columns -->
-    <svg style="position:absolute;top:72px;left:0;width:100%;height:36px;z-index:3;pointer-events:none" viewBox="0 0 1200 36" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <svg class="s3-flow-svg" style="position:absolute;top:72px;left:0;width:100%;height:36px;z-index:3;pointer-events:none" viewBox="0 0 1200 36" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="fg3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#43e8ff"/><stop offset="50%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#10b981"/></linearGradient>
         <marker id="am3a" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,9 3,0 6" fill="#a78bfa" opacity=".8"/></marker>
@@ -454,9 +498,9 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-famil
     </svg>
 
     <!-- COL 1: Set the Rules -->
-    <div class="rev" style="flex:1;display:flex;flex-direction:column;align-items:center;padding:0 1.2%;position:relative;z-index:2">
+    <div class="rev s3-col" style="flex:1;display:flex;flex-direction:column;align-items:center;padding:0 1.2%;position:relative;z-index:2">
       <!-- circle icon — LARGE -->
-      <div style="position:relative;margin-bottom:1rem">
+      <div class="s3-icon-wrap" style="position:relative;margin-bottom:1rem">
         <div style="width:clamp(120px,12vw,150px);height:clamp(120px,12vw,150px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(67,232,255,.38),rgba(14,116,144,.12));border:2.8px solid #43e8ff;display:flex;align-items:center;justify-content:center;box-shadow:0 0 32px rgba(67,232,255,.3)">
           <svg width="64" height="68" viewBox="0 0 64 68" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="4" y="2" width="56" height="64" rx="6" stroke="#43e8ff" stroke-width="3"/>
@@ -468,11 +512,11 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-famil
           </svg>
         </div>
         <div style="position:absolute;top:-8px;right:-8px;width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#43e8ff,#0096c7);display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:15px;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.35)">1</div>
-        <div style="position:absolute;inset:-14px;border-radius:50%;border:1.5px dashed rgba(67,232,255,.22);pointer-events:none"></div>
+        <div class="s3-ring" style="position:absolute;inset:-14px;border-radius:50%;border:1.5px dashed rgba(67,232,255,.22);pointer-events:none"></div>
       </div>
-      <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(1.05rem,1.9vw,1.5rem);color:#43e8ff;text-align:center;margin-bottom:.3rem">Set the Rules</div>
+      <div class="s3-text-start" style="font-family:'Archivo Black',sans-serif;font-size:clamp(1.05rem,1.9vw,1.5rem);color:#43e8ff;text-align:center;margin-bottom:.3rem">Set the Rules</div>
       <div style="font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.6rem">Policy Management</div>
-      <div style="width:40px;height:2.5px;background:linear-gradient(90deg,#43e8ff,transparent);margin-bottom:.8rem"></div>
+      <div class="s3-ruler" style="width:40px;height:2.5px;background:linear-gradient(90deg,#43e8ff,transparent);margin-bottom:.8rem"></div>
       <div style="font-size:clamp(.88rem,1.4vw,1.05rem);color:rgba(255,255,255,.8);text-align:center;line-height:1.6;margin-bottom:.7rem">Defines how data is collected, stored &amp; used.</div>
       <div style="background:rgba(67,232,255,.09);border:1px solid rgba(67,232,255,.25);border-radius:10px;padding:.65rem 1rem;font-size:clamp(.82rem,1.2vw,.95rem);color:rgba(255,255,255,.65);line-height:1.5;text-align:center;font-style:italic;width:100%">
         💡 "No data leaves our servers without encryption."
@@ -480,11 +524,11 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-famil
     </div>
 
     <!-- divider -->
-    <div style="width:1px;background:rgba(255,255,255,.08);flex-shrink:0;margin:2rem 0"></div>
+    <div class="s3-divider" style="width:1px;background:rgba(255,255,255,.08);flex-shrink:0;margin:2rem 0"></div>
 
     <!-- COL 2: Assign Ownership -->
-    <div class="rev" style="flex:1;display:flex;flex-direction:column;align-items:center;padding:0 1.2%;position:relative;z-index:2">
-      <div style="position:relative;margin-bottom:1rem">
+    <div class="rev s3-col" style="flex:1;display:flex;flex-direction:column;align-items:center;padding:0 1.2%;position:relative;z-index:2">
+      <div class="s3-icon-wrap" style="position:relative;margin-bottom:1rem">
         <div style="width:clamp(120px,12vw,150px);height:clamp(120px,12vw,150px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(167,139,250,.38),rgba(76,29,149,.12));border:2.8px solid #a78bfa;display:flex;align-items:center;justify-content:center;box-shadow:0 0 32px rgba(167,139,250,.3)">
           <svg width="68" height="68" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="34" cy="22" r="16" stroke="#a78bfa" stroke-width="3"/>
@@ -496,22 +540,22 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-famil
           </svg>
         </div>
         <div style="position:absolute;top:-8px;right:-8px;width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#6d28d9);display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:15px;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.35)">2</div>
-        <div style="position:absolute;inset:-14px;border-radius:50%;border:1.5px dashed rgba(167,139,250,.22);pointer-events:none"></div>
+        <div class="s3-ring" style="position:absolute;inset:-14px;border-radius:50%;border:1.5px dashed rgba(167,139,250,.22);pointer-events:none"></div>
       </div>
-      <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(1.05rem,1.9vw,1.5rem);color:#a78bfa;text-align:center;margin-bottom:.3rem">Assign Ownership</div>
+      <div class="s3-text-start" style="font-family:'Archivo Black',sans-serif;font-size:clamp(1.05rem,1.9vw,1.5rem);color:#a78bfa;text-align:center;margin-bottom:.3rem">Assign Ownership</div>
       <div style="font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.6rem">Data Stewardship</div>
-      <div style="width:40px;height:2.5px;background:linear-gradient(90deg,#a78bfa,transparent);margin-bottom:.8rem"></div>
+      <div class="s3-ruler" style="width:40px;height:2.5px;background:linear-gradient(90deg,#a78bfa,transparent);margin-bottom:.8rem"></div>
       <div style="font-size:clamp(.88rem,1.4vw,1.05rem);color:rgba(255,255,255,.8);text-align:center;line-height:1.6;margin-bottom:.7rem">One accountable person per data domain.</div>
       <div style="background:rgba(167,139,250,.09);border:1px solid rgba(167,139,250,.25);border-radius:10px;padding:.65rem 1rem;font-size:clamp(.82rem,1.2vw,.95rem);color:rgba(255,255,255,.65);line-height:1.5;text-align:center;font-style:italic;width:100%">
         💡 "The CRM Manager owns all customer data."
       </div>
     </div>
 
-    <div style="width:1px;background:rgba(255,255,255,.08);flex-shrink:0;margin:2rem 0"></div>
+    <div class="s3-divider" style="width:1px;background:rgba(255,255,255,.08);flex-shrink:0;margin:2rem 0"></div>
 
     <!-- COL 3: Enforce Standards -->
-    <div class="rev" style="flex:1;display:flex;flex-direction:column;align-items:center;padding:0 1.2%;position:relative;z-index:2">
-      <div style="position:relative;margin-bottom:1rem">
+    <div class="rev s3-col" style="flex:1;display:flex;flex-direction:column;align-items:center;padding:0 1.2%;position:relative;z-index:2">
+      <div class="s3-icon-wrap" style="position:relative;margin-bottom:1rem">
         <div style="width:clamp(120px,12vw,150px);height:clamp(120px,12vw,150px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(16,185,129,.38),rgba(6,95,70,.12));border:2.8px solid #10b981;display:flex;align-items:center;justify-content:center;box-shadow:0 0 32px rgba(16,185,129,.3)">
           <svg width="68" height="64" viewBox="0 0 68 64" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="2"  y="32" width="17" height="30" rx="3" stroke="#10b981" stroke-width="3"/>
@@ -523,11 +567,11 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-famil
           </svg>
         </div>
         <div style="position:absolute;top:-8px;right:-8px;width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#10b981,#047857);display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:15px;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.35)">3</div>
-        <div style="position:absolute;inset:-14px;border-radius:50%;border:1.5px dashed rgba(16,185,129,.22);pointer-events:none"></div>
+        <div class="s3-ring" style="position:absolute;inset:-14px;border-radius:50%;border:1.5px dashed rgba(16,185,129,.22);pointer-events:none"></div>
       </div>
-      <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(1.05rem,1.9vw,1.5rem);color:#10b981;text-align:center;margin-bottom:.3rem">Enforce Standards</div>
+      <div class="s3-text-start" style="font-family:'Archivo Black',sans-serif;font-size:clamp(1.05rem,1.9vw,1.5rem);color:#10b981;text-align:center;margin-bottom:.3rem">Enforce Standards</div>
       <div style="font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.6rem">Data Quality Mgmt</div>
-      <div style="width:40px;height:2.5px;background:linear-gradient(90deg,#10b981,transparent);margin-bottom:.8rem"></div>
+      <div class="s3-ruler" style="width:40px;height:2.5px;background:linear-gradient(90deg,#10b981,transparent);margin-bottom:.8rem"></div>
       <div style="font-size:clamp(.88rem,1.4vw,1.05rem);color:rgba(255,255,255,.8);text-align:center;line-height:1.6;margin-bottom:.7rem">Monitors accuracy, completeness &amp; consistency.</div>
       <div style="background:rgba(16,185,129,.09);border:1px solid rgba(16,185,129,.25);border-radius:10px;padding:.65rem 1rem;font-size:clamp(.82rem,1.2vw,.95rem);color:rgba(255,255,255,.65);line-height:1.5;text-align:center;font-style:italic;width:100%">
         💡 "Order fields must pass format validation before executed."
@@ -624,52 +668,52 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-famil
     <!-- FLOW CHAIN -->
     <div class="rev" style="display:flex;align-items:center;justify-content:center;gap:0">
 
-      <div style="display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:clamp(90px,9vw,120px)">
+      <div class="flow-item" style="display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:clamp(90px,9vw,120px)">
         <div style="width:clamp(68px,6.2vw,82px);height:clamp(68px,6.2vw,82px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(67,232,255,.38),rgba(0,119,182,.1));border:2.5px solid #43e8ff;display:flex;align-items:center;justify-content:center;font-size:1.8rem;box-shadow:0 0 20px rgba(67,232,255,.28)">🏛️</div>
         <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(.72rem,1.1vw,.88rem);color:#43e8ff;text-align:center;line-height:1.2">Governed<br>Data</div>
       </div>
-      <div style="color:#43e8ff;font-size:1.6rem;opacity:.6;padding-bottom:1.2rem;margin:0 .1rem">›</div>
+      <div class="flow-arrow" style="color:#43e8ff;font-size:1.6rem;opacity:.6;padding-bottom:1.2rem;margin:0 .1rem">›</div>
 
-      <div style="display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:clamp(90px,9vw,120px)">
+      <div class="flow-item" style="display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:clamp(90px,9vw,120px)">
         <div style="width:clamp(68px,6.2vw,82px);height:clamp(68px,6.2vw,82px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(167,139,250,.38),rgba(76,29,149,.1));border:2.5px solid #a78bfa;display:flex;align-items:center;justify-content:center;font-size:1.8rem;box-shadow:0 0 20px rgba(167,139,250,.28)">✅</div>
         <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(.72rem,1.1vw,.88rem);color:#a78bfa;text-align:center;line-height:1.2">High Quality<br>Data</div>
       </div>
-      <div style="color:#a78bfa;font-size:1.6rem;opacity:.6;padding-bottom:1.2rem;margin:0 .1rem">›</div>
+      <div class="flow-arrow" style="color:#a78bfa;font-size:1.6rem;opacity:.6;padding-bottom:1.2rem;margin:0 .1rem">›</div>
 
-      <div style="display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:clamp(90px,9vw,120px)">
+      <div class="flow-item" style="display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:clamp(90px,9vw,120px)">
         <div style="width:clamp(68px,6.2vw,82px);height:clamp(68px,6.2vw,82px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(251,191,36,.38),rgba(146,64,14,.1));border:2.5px solid #fbbf24;display:flex;align-items:center;justify-content:center;font-size:1.8rem;box-shadow:0 0 20px rgba(251,191,36,.28)">🔒</div>
         <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(.72rem,1.1vw,.88rem);color:#fbbf24;text-align:center;line-height:1.2">Trusted<br>Data</div>
       </div>
-      <div style="color:#fbbf24;font-size:1.6rem;opacity:.6;padding-bottom:1.2rem;margin:0 .1rem">›</div>
+      <div class="flow-arrow" style="color:#fbbf24;font-size:1.6rem;opacity:.6;padding-bottom:1.2rem;margin:0 .1rem">›</div>
 
-      <div style="display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:clamp(90px,9vw,120px)">
+      <div class="flow-item" style="display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:clamp(90px,9vw,120px)">
         <div style="width:clamp(68px,6.2vw,82px);height:clamp(68px,6.2vw,82px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(255,157,77,.38),rgba(180,83,9,.1));border:2.5px solid #ff9d4d;display:flex;align-items:center;justify-content:center;font-size:1.8rem;box-shadow:0 0 20px rgba(255,157,77,.28)">⏱️</div>
         <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(.72rem,1.1vw,.88rem);color:#ff9d4d;text-align:center;line-height:1.2">Time<br>Saved</div>
       </div>
-      <div style="color:#ff9d4d;font-size:1.6rem;opacity:.6;padding-bottom:1.2rem;margin:0 .1rem">›</div>
+      <div class="flow-arrow" style="color:#ff9d4d;font-size:1.6rem;opacity:.6;padding-bottom:1.2rem;margin:0 .1rem">›</div>
 
-      <div style="display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:clamp(90px,9vw,120px)">
+      <div class="flow-item" style="display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:clamp(90px,9vw,120px)">
         <div style="width:clamp(68px,6.2vw,82px);height:clamp(68px,6.2vw,82px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(236,72,153,.38),rgba(131,24,67,.1));border:2.5px solid #ec4899;display:flex;align-items:center;justify-content:center;font-size:1.8rem;box-shadow:0 0 20px rgba(236,72,153,.28)">💡</div>
         <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(.72rem,1.1vw,.88rem);color:#ec4899;text-align:center;line-height:1.2">Valuable<br>Insights</div>
       </div>
-      <div style="color:#ec4899;font-size:1.6rem;opacity:.6;padding-bottom:1.2rem;margin:0 .1rem">›</div>
+      <div class="flow-arrow" style="color:#ec4899;font-size:1.6rem;opacity:.6;padding-bottom:1.2rem;margin:0 .1rem">›</div>
 
-      <div style="display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:clamp(90px,9vw,120px)">
+      <div class="flow-item" style="display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:clamp(90px,9vw,120px)">
         <div style="width:clamp(68px,6.2vw,82px);height:clamp(68px,6.2vw,82px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(16,185,129,.38),rgba(6,95,70,.1));border:2.5px solid #10b981;display:flex;align-items:center;justify-content:center;font-size:1.8rem;box-shadow:0 0 20px rgba(16,185,129,.28)">🎯</div>
         <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(.72rem,1.1vw,.88rem);color:#10b981;text-align:center;line-height:1.2">Better<br>Decisions</div>
       </div>
-      <div style="color:#10b981;font-size:1.6rem;opacity:.6;padding-bottom:1.2rem;margin:0 .1rem">›</div>
+      <div class="flow-arrow" style="color:#10b981;font-size:1.6rem;opacity:.6;padding-bottom:1.2rem;margin:0 .1rem">›</div>
 
-      <div style="display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:clamp(90px,9vw,120px)">
+      <div class="flow-item" style="display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:clamp(90px,9vw,120px)">
         <div style="width:clamp(74px,6.8vw,90px);height:clamp(74px,6.8vw,90px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(34,211,238,.42),rgba(14,116,144,.14));border:3px solid #22d3ee;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 0 26px rgba(34,211,238,.35)">🚀</div>
         <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(.72rem,1.1vw,.88rem);color:#22d3ee;text-align:center;line-height:1.2">Better<br>Results</div>
       </div>
     </div>
 
     <!-- 3 EXAMPLE CARDS -->
-    <div class="rev" style="display:flex;gap:1.2rem">
+    <div class="rev cards-row" style="display:flex;gap:1.2rem">
 
-      <div style="flex:1;background:rgba(67,232,255,.08);border:1.5px solid rgba(67,232,255,.25);border-radius:14px;padding:.85rem 1.1rem;border-left:4px solid #43e8ff">
+      <div class="card-item" style="flex:1;background:rgba(67,232,255,.08);border:1.5px solid rgba(67,232,255,.25);border-radius:14px;padding:.85rem 1.1rem;border-left:4px solid #43e8ff">
         <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.35rem">
           <span style="font-size:1.3rem">🛍️</span>
           <span style="font-family:'Archivo Black',sans-serif;font-size:clamp(.9rem,1.4vw,1.1rem);color:#43e8ff">Accurate Segments</span>
@@ -677,7 +721,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-famil
         <div style="font-size:clamp(.82rem,1.2vw,.95rem);color:rgba(255,255,255,.72);line-height:1.55">Governed customer data → correct audience →<br><strong style="color:#fff">no wasted ad spend</strong></div>
       </div>
 
-      <div style="flex:1;background:rgba(167,139,250,.08);border:1.5px solid rgba(167,139,250,.25);border-radius:14px;padding:.85rem 1.1rem;border-left:4px solid #a78bfa">
+      <div class="card-item" style="flex:1;background:rgba(167,139,250,.08);border:1.5px solid rgba(167,139,250,.25);border-radius:14px;padding:.85rem 1.1rem;border-left:4px solid #a78bfa">
         <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.35rem">
           <span style="font-size:1.3rem">📦</span>
           <span style="font-family:'Archivo Black',sans-serif;font-size:clamp(.9rem,1.4vw,1.1rem);color:#a78bfa">Faster Go-to-Market</span>
@@ -685,7 +729,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-famil
         <div style="font-size:clamp(.82rem,1.2vw,.95rem);color:rgba(255,255,255,.72);line-height:1.55">Trusted inventory data → skip manual checks →<br><strong style="color:#fff">launch campaigns quicker</strong></div>
       </div>
 
-      <div style="flex:1;background:rgba(16,185,129,.08);border:1.5px solid rgba(16,185,129,.25);border-radius:14px;padding:.85rem 1.1rem;border-left:4px solid #10b981">
+      <div class="card-item" style="flex:1;background:rgba(16,185,129,.08);border:1.5px solid rgba(16,185,129,.25);border-radius:14px;padding:.85rem 1.1rem;border-left:4px solid #10b981">
         <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.35rem">
           <span style="font-size:1.3rem">💰</span>
           <span style="font-family:'Archivo Black',sans-serif;font-size:clamp(.9rem,1.4vw,1.1rem);color:#10b981">Smarter Pricing</span>
@@ -792,8 +836,8 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-famil
     <ellipse cx="220"  cy="660" rx="420" ry="280" fill="url(#s7b3)"/>
     <!-- diagonal accent like slide 1 -->
     <polygon points="0,810 280,0 310,0 30,810" fill="#43e8ff" opacity=".06"/>
-    <polygon points="1130,0 1440,0 1440,810 1160,810" fill="#1a6aff" opacity=".07"/>
-    <path d="M1130,0 L1440,810" stroke="#43e8ff" stroke-width="1" opacity=".18"/>
+    <polygon points="1280,0 1440,0 1440,810 1310,810" fill="#1a6aff" opacity=".07"/>
+    <path d="M1290,0 L1440,650" stroke="#43e8ff" stroke-width="1" opacity=".18"/>
     <path d="M-60,180 Q420,110 900,190 T1500,140" stroke="#43e8ff" stroke-width="1" fill="none" opacity=".12"/>
     <path d="M-60,640 Q420,570 900,650 T1500,600" stroke="#a78bfa" stroke-width=".8" fill="none" opacity=".1"/>
     <!-- dot grid top-right -->
