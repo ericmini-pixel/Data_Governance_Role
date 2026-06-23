@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Governance — Eric Fong</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-family:'DM Sans',sans-serif;color:#fff}
+.deck{width:100vw;height:100vh;position:relative}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease;pointer-events:none;overflow:hidden}
+.slide.active{opacity:1;transform:translateY(0);pointer-events:all}
+.bg{position:absolute;inset:0;z-index:0;pointer-events:none}
+.z2{position:relative;z-index:2}
+
+/* NAV */
+.nav{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:300;display:flex;align-items:center;gap:10px;background:rgba(10,20,60,.65);backdrop-filter:blur(18px);padding:7px 18px;border-radius:40px;border:1px solid rgba(255,255,255,.15)}
+.nav button{width:34px;height:34px;border:none;background:rgba(255,255,255,.1);color:#fff;border-radius:50%;font-size:1.1rem;cursor:pointer;transition:background .2s}
+.nav button:hover{background:rgba(255,255,255,.25)}
+.dots{display:flex;gap:7px}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .3s}
+.dot.active{background:#43e8ff;transform:scale(1.45)}
+.nc{font-size:.72rem;color:rgba(255,255,255,.45);min-width:30px;text-align:center}
+
+/* REVEAL */
+.rev{opacity:0;transform:translateY(18px)}
+
+/* SHARED TYPOGRAPHY */
+.eyebrow{font-size:.66rem;letter-spacing:.26em;text-transform:uppercase;color:#43e8ff;margin-bottom:.35rem}
+.title-xl{font-family:'Archivo Black',sans-serif;font-size:clamp(1.5rem,3vw,2.6rem);color:#fff;line-height:1.05}
+.grad-teal{background:linear-gradient(90deg,#43e8ff,#00b8d9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.grad-purple{background:linear-gradient(90deg,#a78bfa,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.grad-orange{background:linear-gradient(90deg,#ff9d4d,#ff6b6b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* shared pill */
+.pill{display:inline-block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;padding:.28rem .9rem;border-radius:100px;border:1px solid;font-weight:600}
+</style>
+</head>
+<body>
+<div class="deck">
+
+<!-- ══ SLIDE 1: COVER ══ -->
+<div class="slide active" data-slide="1" style="background:linear-gradient(135deg,#1a3a8f 0%,#1e4db7 50%,#1a4fa8 100%)">
+<svg class="bg" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="b1_a" cx="70%" cy="15%" r="55%"><stop offset="0%" stop-color="#1a6aff" stop-opacity=".28"/><stop offset="100%" stop-color="#1a3a8f" stop-opacity="0"/></radialGradient>
+      <radialGradient id="b2_b" cx="15%" cy="85%" r="50%"><stop offset="0%" stop-color="#ff6b35" stop-opacity=".18"/><stop offset="100%" stop-color="#1a3a8f" stop-opacity="0"/></radialGradient>
+      <radialGradient id="b3_c" cx="50%" cy="50%" r="38%"><stop offset="0%" stop-color="#43e8ff" stop-opacity=".08"/><stop offset="100%" stop-color="#1a3a8f" stop-opacity="0"/></radialGradient>
+    </defs>
+    <ellipse cx="1100" cy="120" rx="560" ry="340" fill="url(#b1_a)"/>
+    <ellipse cx="220"  cy="680" rx="440" ry="300" fill="url(#b2_b)"/>
+    <ellipse cx="720"  cy="420" rx="380" ry="260" fill="url(#b3_c)"/>
+    <path d="M-60,180 Q420,100 880,200 T1500,140" stroke="#43e8ff" stroke-width="1" fill="none" opacity=".12"/>
+    <path d="M-60,640 Q420,560 880,660 T1500,600" stroke="#a78bfa" stroke-width=".8" fill="none" opacity=".1"/>
+    <polygon points="0,0 660,0 550,810 0,810" fill="#1a6aff" opacity=".09"/>
+  <polygon points="660,0 682,0 572,810 550,810" fill="#43e8ff" opacity=".55"/>
+  <polygon points="698,0 703,0 593,810 588,810" fill="#1a6aff" opacity=".2"/>
+  <polygon points="1440,0 1440,200 1220,0" fill="#1a6aff" opacity=".07"/>
+  <path d="M1220,0 L1440,200" stroke="#43e8ff" stroke-width="1.2" opacity=".25"/>
+  <g fill="#43e8ff" opacity=".18">
+    <circle cx="90" cy="700" r="2.5"/><circle cx="122" cy="700" r="2.5"/><circle cx="154" cy="700" r="2.5"/>
+    <circle cx="90" cy="730" r="2.5"/><circle cx="122" cy="730" r="2"/><circle cx="154" cy="730" r="1.5"/>
+    <circle cx="90" cy="760" r="2"/><circle cx="122" cy="760" r="1.5"/>
+  </g>
+  </svg>
+  <!-- SPLIT BODY -->
+  <div style="display:flex;width:100%;height:100%">
+
+    <!-- LEFT: Big numbers -->
+    <div style="width:47%;display:flex;flex-direction:column;justify-content:center;padding:5% 4% 5% 10%;gap:2rem;position:relative;z-index:2">
+
+      <div class="rev">
+        <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(3.5rem,6.8vw,6.8rem);line-height:.88;letter-spacing:-.02em;background:linear-gradient(135deg,#43e8ff 0%,#00b8d9 50%,#e0f7fa 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">1 hour</div>
+        <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(1.4rem,2.8vw,2.6rem);color:#43e8ff;margin-top:.2rem">= 3,600 <span style="font-size:.6em;color:rgba(255,255,255,.55);font-weight:400">sec</span></div>
+        <div style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.38);margin-top:.35rem">of transactions processed</div>
+        <div style="width:48px;height:2.5px;background:linear-gradient(90deg,#43e8ff,transparent);margin-top:.6rem"></div>
+      </div>
+
+      <div class="rev">
+        <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(3rem,6vw,5.8rem);line-height:.88;letter-spacing:-.02em;background:linear-gradient(135deg,#ff9d4d 0%,#ff6b6b 60%,#fff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">100,000</div>
+        <div style="font-size:clamp(.85rem,1.5vw,1.2rem);color:rgba(255,160,80,.9);font-weight:700;margin-top:.2rem">orders</div>
+        <div style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.38);margin-top:.28rem">every single one matters</div>
+        <div style="width:48px;height:2.5px;background:linear-gradient(90deg,#ff9d4d,transparent);margin-top:.6rem"></div>
+      </div>
+
+      <div class="rev" style="display:flex;gap:1.6rem;margin-top:.2rem">
+        <div style="text-align:center"><div style="font-family:'Archivo Black',sans-serif;font-size:1.45rem;color:#a78bfa">99.9%</div><div style="font-size:.6rem;color:rgba(255,255,255,.36);letter-spacing:.12em;text-transform:uppercase;margin-top:.15rem">Accuracy<br>Target</div></div>
+        <div style="width:1px;background:rgba(255,255,255,.1)"></div>
+        <div style="text-align:center"><div style="font-family:'Archivo Black',sans-serif;font-size:1.45rem;color:#ff9d4d">24/7</div><div style="font-size:.6rem;color:rgba(255,255,255,.36);letter-spacing:.12em;text-transform:uppercase;margin-top:.15rem">Data<br>Flow</div></div>
+        <div style="width:1px;background:rgba(255,255,255,.1)"></div>
+        <div style="text-align:center"><div style="font-family:'Archivo Black',sans-serif;font-size:1.45rem;color:#43e8ff">6</div><div style="font-size:.6rem;color:rgba(255,255,255,.36);letter-spacing:.12em;text-transform:uppercase;margin-top:.15rem">Business<br>Depts</div></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Title -->
+    <div style="width:53%;display:flex;flex-direction:column;justify-content:center;padding:5% 5% 5% 4%;border-left:1.5px solid rgba(255,255,255,.12);position:relative;z-index:2;gap:1.2rem">
+      <p class="rev" style="font-size:clamp(.85rem,1.3vw,1.1rem);font-style:italic;color:rgba(255,255,255,.7);line-height:1.6;padding-left:1rem;border-left:3px solid #43e8ff;max-width:500px">"Can you trust every single data point behind that?"</p>
+
+      <div class="rev">
+        <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(3rem,5.8vw,5.6rem);color:#fff;line-height:.9;letter-spacing:-.01em">DATA<br><span style="background:linear-gradient(90deg,#43e8ff,#00b8d9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">GOVERNANCE</span></div>
+      </div>
+
+      <div class="rev" style="font-size:clamp(.78rem,1.15vw,.98rem);letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.42)">The Business Function Behind Reliable Data</div>
+
+      <div class="rev" style="display:flex;gap:.6rem;flex-wrap:wrap">
+        <span class="pill" style="color:#43e8ff;border-color:rgba(67,232,255,.35);background:rgba(67,232,255,.08)">Accuracy</span>
+        <span class="pill" style="color:#ff9d4d;border-color:rgba(255,157,77,.35);background:rgba(255,157,77,.08)">Integrity</span>
+        <span class="pill" style="color:#a78bfa;border-color:rgba(167,139,250,.35);background:rgba(167,139,250,.08)">Accountability</span>
+        <span class="pill" style="color:rgba(255,255,255,.6);border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.05)">Compliance</span>
+      </div>
+
+      <div class="rev" style="font-size:.78rem;color:rgba(255,255,255,.3);margin-top:.4rem;font-style:italic">Presented by Eric Fong</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 2: MY STORE HONEYCOMB ══ -->
+<div class="slide" data-slide="2" style="background:linear-gradient(135deg,#1b3f9a 0%,#1e4cc0 50%,#1a4aaa 100%)">
+  <svg class="bg" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="s2b1" cx="80%" cy="15%" r="55%"><stop offset="0%" stop-color="#1a6aff" stop-opacity=".22"/><stop offset="100%" stop-color="#1b3f9a" stop-opacity="0"/></radialGradient>
+      <radialGradient id="s2b2" cx="15%" cy="85%" r="48%"><stop offset="0%" stop-color="#7c3aed" stop-opacity=".18"/><stop offset="100%" stop-color="#1b3f9a" stop-opacity="0"/></radialGradient>
+    </defs>
+    <ellipse cx="1150" cy="130" rx="540" ry="320" fill="url(#s2b1)"/>
+    <ellipse cx="220"  cy="670" rx="420" ry="280" fill="url(#s2b2)"/>
+    <path d="M-60,180 Q420,110 900,200 T1500,150" stroke="#43e8ff" stroke-width="1" fill="none" opacity=".12"/>
+    <polygon points="1440,0 1440,180 1260,0" fill="#1a6aff" opacity=".06"/>
+    <path d="M1260,0 L1440,180" stroke="#43e8ff" stroke-width="1" opacity=".2"/>
+  </svg>
+
+  <div class="z2 rev" style="text-align:center;padding:1.4rem 1rem .4rem">
+    <div class="eyebrow">My Store · Data Ecosystem</div>
+    <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(1.4rem,2.5vw,2.1rem);color:#fff;line-height:1.05">Business Areas <span style="background:linear-gradient(90deg,#43e8ff,#00b8d9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Affected by Data Governance</span></div>
+    <div style="font-size:.82rem;color:rgba(255,255,255,.4);margin-top:.25rem;font-style:italic">"Every business problem I encountered came back to one thing — bad data."</div>
+  </div>
+
+  <div class="z2 rev" style="flex:1;display:flex;align-items:center;justify-content:center;padding-bottom:2.8rem">
+    <svg viewBox="185 -65 610 690" xmlns="http://www.w3.org/2000/svg"
+         style="width:min(680px,75vw);height:auto;max-height:76vh;overflow:visible">
+      <defs>
+        <linearGradient id="h0" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f59e0b" stop-opacity=".42"/><stop offset="100%" stop-color="#b45309" stop-opacity=".14"/></linearGradient>
+        <linearGradient id="h1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#10b981" stop-opacity=".42"/><stop offset="100%" stop-color="#065f46" stop-opacity=".14"/></linearGradient>
+        <linearGradient id="h2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fbbf24" stop-opacity=".42"/><stop offset="100%" stop-color="#92400e" stop-opacity=".14"/></linearGradient>
+        <linearGradient id="h3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ec4899" stop-opacity=".42"/><stop offset="100%" stop-color="#831843" stop-opacity=".14"/></linearGradient>
+        <linearGradient id="h4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#8b5cf6" stop-opacity=".42"/><stop offset="100%" stop-color="#4c1d95" stop-opacity=".14"/></linearGradient>
+        <linearGradient id="h5" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22d3ee" stop-opacity=".42"/><stop offset="100%" stop-color="#0e7490" stop-opacity=".14"/></linearGradient>
+        <linearGradient id="hc" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fff" stop-opacity=".22"/><stop offset="100%" stop-color="#1a6aff" stop-opacity=".1"/></linearGradient>
+        <filter id="hglow" x="-25%" y="-25%" width="150%" height="150%"><feDropShadow dx="0" dy="5" stdDeviation="12" flood-color="rgba(0,0,0,.5)"/></filter>
+        <filter id="cglow" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="12" result="b"/><feFlood flood-color="#43e8ff" flood-opacity=".14" result="c"/>
+          <feComposite in="c" in2="b" operator="in" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <!-- hex: R=110, points="95.3,55 0,110 -95.3,55 -95.3,-55 0,-110 95.3,-55" -->
+      <!-- cx=490,cy=278,  dist=220 -->
+      <!-- connectors: from centre (490,278) edge toward each outer hex -->
+      <line x1="490" y1="168" x2="490" y2="94"  stroke="#f59e0b" stroke-width="1.8" stroke-dasharray="5,4" opacity=".4"/>
+      <line x1="576" y1="224" x2="614" y2="195" stroke="#10b981" stroke-width="1.8" stroke-dasharray="5,4" opacity=".4"/>
+      <line x1="576" y1="332" x2="614" y2="361" stroke="#fbbf24" stroke-width="1.8" stroke-dasharray="5,4" opacity=".4"/>
+      <line x1="490" y1="388" x2="490" y2="462" stroke="#ec4899" stroke-width="1.8" stroke-dasharray="5,4" opacity=".4"/>
+      <line x1="404" y1="332" x2="366" y2="361" stroke="#8b5cf6" stroke-width="1.8" stroke-dasharray="5,4" opacity=".4"/>
+      <line x1="404" y1="224" x2="366" y2="195" stroke="#22d3ee" stroke-width="1.8" stroke-dasharray="5,4" opacity=".4"/>
+
+      <!-- TOP: Business Operations  cx=490, cy=58 -->
+      <g class="hex-g" filter="url(#hglow)">
+        <polygon transform="translate(490,58)" points="95.3,55 0,110 -95.3,55 -95.3,-55 0,-110 95.3,-55" fill="url(#h0)" stroke="#f59e0b" stroke-width="2.5"/>
+        <g transform="translate(490,28)"><rect x="-22" y="-14" width="44" height="38" rx="5" fill="none" stroke="#f59e0b" stroke-width="3.2"/><path d="M-13,-14 L-13,-25 Q-13,-36 0,-36 Q13,-36 13,-25 L13,-14" fill="none" stroke="#f59e0b" stroke-width="3.2" stroke-linecap="round"/><circle cx="-7" cy="8" r="5" fill="#f59e0b" opacity=".65"/><circle cx="9" cy="8" r="5" fill="#f59e0b" opacity=".65"/></g>
+        <text x="490" y="89"  text-anchor="middle" font-family="'Archivo Black',sans-serif" font-size="12" fill="#f59e0b">BUSINESS OPS</text>
+        <text x="490" y="104" text-anchor="middle" font-family="'Archivo Black',sans-serif" font-size="12" fill="#f59e0b">Ecomm &amp; FOB</text>
+        <text x="490" y="118" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9.5" fill="#fcd34d" opacity=".85">Order data · inconsistency pain</text>
+      </g>
+
+      <!-- TOP-RIGHT: Logistics  cx=680.5, cy=168 -->
+      <g class="hex-g" filter="url(#hglow)">
+        <polygon transform="translate(680.5,168)" points="95.3,55 0,110 -95.3,55 -95.3,-55 0,-110 95.3,-55" fill="url(#h1)" stroke="#10b981" stroke-width="2.5"/>
+        <g transform="translate(680.5,137)"><rect x="-28" y="-10" width="38" height="26" rx="4" fill="none" stroke="#10b981" stroke-width="3.2"/><path d="M10,-10 L10,12 L32,12 L32,2 L22,-10 Z" fill="none" stroke="#10b981" stroke-width="3.2" stroke-linejoin="round"/><circle cx="-14" cy="22" r="7" fill="none" stroke="#10b981" stroke-width="2.8"/><circle cx="22" cy="22" r="7" fill="none" stroke="#10b981" stroke-width="2.8"/></g>
+        <text x="680.5" y="199" text-anchor="middle" font-family="'Archivo Black',sans-serif" font-size="12" fill="#10b981">LOGISTICS &amp;</text>
+        <text x="680.5" y="214" text-anchor="middle" font-family="'Archivo Black',sans-serif" font-size="12" fill="#10b981">DEMAND PLAN</text>
+        <text x="680.5" y="229" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9.5" fill="#6ee7b7" opacity=".85">Inventory &amp; sales data</text>
+      </g>
+
+      <!-- BOTTOM-RIGHT: Product Dev  cx=680.5, cy=388 -->
+      <g class="hex-g" filter="url(#hglow)">
+        <polygon transform="translate(680.5,388)" points="95.3,55 0,110 -95.3,55 -95.3,-55 0,-110 95.3,-55" fill="url(#h2)" stroke="#fbbf24" stroke-width="2.5"/>
+        <g transform="translate(680.5,355)"><path d="M0,-30 C-18,-30 -26,-16 -26,-6 C-26,9 -13,20 -6,27 L6,27 C13,20 26,9 26,-6 C26,-16 18,-30 0,-30 Z" fill="none" stroke="#fbbf24" stroke-width="3.2"/><line x1="-6" y1="27" x2="-6" y2="36" stroke="#fbbf24" stroke-width="2.8" stroke-linecap="round"/><line x1="6" y1="27" x2="6" y2="36" stroke="#fbbf24" stroke-width="2.8" stroke-linecap="round"/><line x1="-8" y1="32" x2="8" y2="32" stroke="#fbbf24" stroke-width="2.4" stroke-linecap="round"/></g>
+        <text x="680.5" y="419" text-anchor="middle" font-family="'Archivo Black',sans-serif" font-size="12" fill="#fbbf24">PRODUCT</text>
+        <text x="680.5" y="434" text-anchor="middle" font-family="'Archivo Black',sans-serif" font-size="12" fill="#fbbf24">DEVELOPMENT</text>
+        <text x="680.5" y="449" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9.5" fill="#fde68a" opacity=".85">Data-driven NPD</text>
+      </g>
+
+      <!-- BOTTOM: Trade Mkt  cx=490, cy=498 -->
+      <g class="hex-g" filter="url(#hglow)">
+        <polygon transform="translate(490,498)" points="95.3,55 0,110 -95.3,55 -95.3,-55 0,-110 95.3,-55" fill="url(#h3)" stroke="#ec4899" stroke-width="2.5"/>
+        <g transform="translate(490,466)"><rect x="-28" y="-28" width="18" height="18" rx="3" fill="none" stroke="#ec4899" stroke-width="3"/><rect x="10" y="-28" width="18" height="18" rx="3" fill="none" stroke="#ec4899" stroke-width="3"/><rect x="-28" y="-5" width="18" height="18" rx="3" fill="#ec4899" fill-opacity=".22" stroke="#ec4899" stroke-width="3"/><rect x="10" y="-5" width="18" height="18" rx="3" fill="none" stroke="#ec4899" stroke-width="3"/><rect x="-9" y="18" width="18" height="10" rx="3" fill="#ec4899" fill-opacity=".25" stroke="#ec4899" stroke-width="2.4"/></g>
+        <text x="490" y="529" text-anchor="middle" font-family="'Archivo Black',sans-serif" font-size="12" fill="#ec4899">TRADE MKT &amp;</text>
+        <text x="490" y="544" text-anchor="middle" font-family="'Archivo Black',sans-serif" font-size="12" fill="#ec4899">PLANOGRAM</text>
+        <text x="490" y="559" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9.5" fill="#f9a8d4" opacity=".85">Retail channel consistency</text>
+      </g>
+
+      <!-- BOTTOM-LEFT: Digital Marketing  cx=299.5, cy=388 -->
+      <g class="hex-g" filter="url(#hglow)">
+        <polygon transform="translate(299.5,388)" points="95.3,55 0,110 -95.3,55 -95.3,-55 0,-110 95.3,-55" fill="url(#h4)" stroke="#8b5cf6" stroke-width="2.5"/>
+        <g transform="translate(299.5,355)"><path d="M-26,12 L-26,-12 L18,-32 L18,32 Z" fill="none" stroke="#8b5cf6" stroke-width="3.2" stroke-linejoin="round"/><path d="M-26,12 L-26,28 L-12,28 L-12,12" fill="none" stroke="#8b5cf6" stroke-width="2.8" stroke-linejoin="round"/><circle cx="28" cy="0" r="7" fill="none" stroke="#8b5cf6" stroke-width="2.4" opacity=".75"/><circle cx="28" cy="0" r="13" fill="none" stroke="#8b5cf6" stroke-width="1.4" opacity=".4"/></g>
+        <text x="299.5" y="419" text-anchor="middle" font-family="'Archivo Black',sans-serif" font-size="12" fill="#8b5cf6">DIGITAL</text>
+        <text x="299.5" y="434" text-anchor="middle" font-family="'Archivo Black',sans-serif" font-size="12" fill="#8b5cf6">MARKETING</text>
+        <text x="299.5" y="449" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9.5" fill="#c4b5fd" opacity=".85">Clean customer data</text>
+      </g>
+
+      <!-- TOP-LEFT: Data Gov & Org Policy  cx=299.5, cy=168 -->
+      <g class="hex-g" filter="url(#hglow)">
+        <polygon transform="translate(299.5,168)" points="95.3,55 0,110 -95.3,55 -95.3,-55 0,-110 95.3,-55" fill="url(#h5)" stroke="#22d3ee" stroke-width="2.5"/>
+        <g transform="translate(299.5,136)"><path d="M0,-32 L28,-16 L28,8 Q28,30 0,44 Q-28,30 -28,8 L-28,-16 Z" fill="none" stroke="#22d3ee" stroke-width="3.2" stroke-linejoin="round"/><path d="M-12,6 L-3,17 L16,-9" stroke="#22d3ee" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+        <text x="299.5" y="199" text-anchor="middle" font-family="'Archivo Black',sans-serif" font-size="12" fill="#22d3ee">DATA GOV &amp;</text>
+        <text x="299.5" y="214" text-anchor="middle" font-family="'Archivo Black',sans-serif" font-size="12" fill="#22d3ee">ORG POLICY</text>
+        <text x="299.5" y="229" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9.5" fill="#a5f3fc" opacity=".85">Rules &amp; standards</text>
+      </g>
+
+      <!-- CENTER: MY STORE  cx=490, cy=278 -->
+      <g style="cursor:pointer" filter="url(#cglow)">
+        <polygon transform="translate(490,278)" points="95.3,55 0,110 -95.3,55 -95.3,-55 0,-110 95.3,-55" fill="url(#hc)" stroke="#fff" stroke-width="3.2" stroke-opacity=".85"/>
+        <g transform="translate(490,248)"><path d="M-24,-20 L24,-20 L30,0 L-30,0 Z" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><path d="M-30,0 L-30,24 L30,24 L30,0" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><path d="M-9,24 L-9,9 Q-9,3 0,3 Q9,3 9,9 L9,24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linejoin="round"/><line x1="13" y1="24" x2="13" y2="9" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><line x1="13" y1="9" x2="24" y2="9" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><line x1="24" y1="9" x2="24" y2="24" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></g>
+        <text x="490" y="306" text-anchor="middle" font-family="'Archivo Black',sans-serif" font-size="15" fill="#fff">MY STORE</text>
+        <text x="490" y="322" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="rgba(255,255,255,.65)">Data Ecosystem</text>
+      </g>
+    </svg>
+  </div>
+  <div class="z2" style="text-align:center;padding-bottom:3rem;font-size:.78rem;color:rgba(255,255,255,.35);font-style:italic">Data governance is a strategy, not an individual system nor single IT project.</div>
+</div>
+
+<!-- ══ SLIDE 3: WHAT IS DATA GOVERNANCE ══ -->
+<div class="slide" data-slide="3" style="background:linear-gradient(135deg,#1a3a8f 0%,#1e4db7 50%,#1a4fa8 100%)">
+  <svg class="bg" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="s3b1" cx="15%" cy="20%" r="50%"><stop offset="0%" stop-color="#43e8ff" stop-opacity=".18"/><stop offset="100%" stop-color="#1a3a8f" stop-opacity="0"/></radialGradient>
+      <radialGradient id="s3b2" cx="85%" cy="80%" r="50%"><stop offset="0%" stop-color="#a78bfa" stop-opacity=".15"/><stop offset="100%" stop-color="#1a3a8f" stop-opacity="0"/></radialGradient>
+    </defs>
+    <ellipse cx="200" cy="200" rx="440" ry="300" fill="url(#s3b1)"/>
+    <ellipse cx="1260" cy="640" rx="420" ry="280" fill="url(#s3b2)"/>
+    <path d="M-60,150 Q420,90 900,170 T1500,120" stroke="#43e8ff" stroke-width="1" fill="none" opacity=".12"/>
+    <path d="M-60,660 Q420,590 900,670 T1500,620" stroke="#a78bfa" stroke-width=".8" fill="none" opacity=".1"/>
+  </svg>
+
+  <!-- HEADER -->
+  <div class="z2 rev" style="text-align:center;padding:0.6rem 1rem .3rem">
+    <div class="eyebrow">Data Governance · Core Concept</div>
+    <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(1.8rem,3.2vw,2.8rem);color:#fff;line-height:1.05">
+      What is <span style="background:linear-gradient(90deg,#43e8ff,#00b8d9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Data Governance</span>?
+    </div>
+  </div>
+
+  <!-- QUOTE ROW -->
+  <div class="z2 rev" style="display:flex;gap:1.2rem;padding:.8rem 3% .6rem;justify-content:center">
+    <div style="flex:1;max-width:500px;background:rgba(67,232,255,.07);border:1px solid rgba(67,232,255,.22);border-radius:12px;padding:.7rem 1.1rem;border-left:3px solid #43e8ff">
+      <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.18em;color:#43e8ff;margin-bottom:.2rem">Google</div>
+      <div style="font-size:.9rem;color:rgba(255,255,255,.78);line-height:1.5;font-style:italic">"…everything you do to ensure data is secure, private, accurate, available, and usable…"</div>
+    </div>
+    <div style="flex:1;max-width:500px;background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.22);border-radius:12px;padding:.7rem 1.1rem;border-left:3px solid #a78bfa">
+      <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.18em;color:#a78bfa;margin-bottom:.2rem">Microsoft</div>
+      <div style="font-size:.9rem;color:rgba(255,255,255,.78);line-height:1.5;font-style:italic">"…system of internal policies organisations use to manage, access, and secure enterprise data."</div>
+    </div>
+  </div>
+
+  <!-- 3 COLUMNS — big and readable -->
+  <div class="z2" style="flex:1;display:flex;align-items:stretch;padding:1.2rem 2% 3rem;gap:1.2rem;position:relative">
+
+    <!-- flow arrow row above columns -->
+    <svg style="position:absolute;top:72px;left:0;width:100%;height:36px;z-index:3;pointer-events:none" viewBox="0 0 1200 36" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="fg3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#43e8ff"/><stop offset="50%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#10b981"/></linearGradient>
+        <marker id="am3a" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,9 3,0 6" fill="#a78bfa" opacity=".8"/></marker>
+        <marker id="am3b" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,9 3,0 6" fill="#10b981" opacity=".8"/></marker>
+      </defs>
+      <line x1="280" y1="18" x2="430" y2="18" stroke="url(#fg3)" stroke-width="2.2" stroke-dasharray="6,4" opacity=".6" marker-end="url(#am3a)"/>
+      <line x1="680" y1="18" x2="830" y2="18" stroke="url(#fg3)" stroke-width="2.2" stroke-dasharray="6,4" opacity=".6" marker-end="url(#am3b)"/>
+    </svg>
+
+    <!-- COL 1: Set the Rules -->
+    <div class="rev" style="flex:1;display:flex;flex-direction:column;align-items:center;padding:0 1.2%;position:relative;z-index:2">
+      <!-- circle icon — LARGE -->
+      <div style="position:relative;margin-bottom:1rem">
+        <div style="width:clamp(120px,12vw,150px);height:clamp(120px,12vw,150px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(67,232,255,.38),rgba(14,116,144,.12));border:2.8px solid #43e8ff;display:flex;align-items:center;justify-content:center;box-shadow:0 0 32px rgba(67,232,255,.3)">
+          <svg width="64" height="68" viewBox="0 0 64 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="2" width="56" height="64" rx="6" stroke="#43e8ff" stroke-width="3"/>
+            <path d="M40,2 L56,18 L40,18 Z" fill="#43e8ff" opacity=".22" stroke="#43e8ff" stroke-width="1.5"/>
+            <line x1="14" y1="27" x2="46" y2="27" stroke="#43e8ff" stroke-width="3" stroke-linecap="round"/>
+            <line x1="14" y1="38" x2="46" y2="38" stroke="#43e8ff" stroke-width="3" stroke-linecap="round"/>
+            <line x1="14" y1="49" x2="32" y2="49" stroke="#43e8ff" stroke-width="3" stroke-linecap="round"/>
+            <path d="M34,44 L39,52 L54,34" stroke="#43e8ff" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div style="position:absolute;top:-8px;right:-8px;width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#43e8ff,#0096c7);display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:15px;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.35)">1</div>
+        <div style="position:absolute;inset:-14px;border-radius:50%;border:1.5px dashed rgba(67,232,255,.22);pointer-events:none"></div>
+      </div>
+      <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(1.05rem,1.9vw,1.5rem);color:#43e8ff;text-align:center;margin-bottom:.3rem">Set the Rules</div>
+      <div style="font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.6rem">Policy Management</div>
+      <div style="width:40px;height:2.5px;background:linear-gradient(90deg,#43e8ff,transparent);margin-bottom:.8rem"></div>
+      <div style="font-size:clamp(.88rem,1.4vw,1.05rem);color:rgba(255,255,255,.8);text-align:center;line-height:1.6;margin-bottom:.7rem">Defines how data is collected, stored &amp; used.</div>
+      <div style="background:rgba(67,232,255,.09);border:1px solid rgba(67,232,255,.25);border-radius:10px;padding:.65rem 1rem;font-size:clamp(.82rem,1.2vw,.95rem);color:rgba(255,255,255,.65);line-height:1.5;text-align:center;font-style:italic;width:100%">
+        💡 "No data leaves our servers without encryption."
+      </div>
+    </div>
+
+    <!-- divider -->
+    <div style="width:1px;background:rgba(255,255,255,.08);flex-shrink:0;margin:2rem 0"></div>
+
+    <!-- COL 2: Assign Ownership -->
+    <div class="rev" style="flex:1;display:flex;flex-direction:column;align-items:center;padding:0 1.2%;position:relative;z-index:2">
+      <div style="position:relative;margin-bottom:1rem">
+        <div style="width:clamp(120px,12vw,150px);height:clamp(120px,12vw,150px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(167,139,250,.38),rgba(76,29,149,.12));border:2.8px solid #a78bfa;display:flex;align-items:center;justify-content:center;box-shadow:0 0 32px rgba(167,139,250,.3)">
+          <svg width="68" height="68" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="34" cy="22" r="16" stroke="#a78bfa" stroke-width="3"/>
+            <path d="M8,62 Q8,42 34,42 Q60,42 60,62" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" fill="none"/>
+            <circle cx="54" cy="40" r="11" fill="rgba(167,139,250,.14)" stroke="#a78bfa" stroke-width="2.4"/>
+            <circle cx="54" cy="36" r="4.5" fill="none" stroke="#a78bfa" stroke-width="2.2"/>
+            <line x1="54" y1="41" x2="54" y2="51" stroke="#a78bfa" stroke-width="2.4" stroke-linecap="round"/>
+            <line x1="49" y1="47" x2="59" y2="47" stroke="#a78bfa" stroke-width="2.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div style="position:absolute;top:-8px;right:-8px;width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#6d28d9);display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:15px;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.35)">2</div>
+        <div style="position:absolute;inset:-14px;border-radius:50%;border:1.5px dashed rgba(167,139,250,.22);pointer-events:none"></div>
+      </div>
+      <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(1.05rem,1.9vw,1.5rem);color:#a78bfa;text-align:center;margin-bottom:.3rem">Assign Ownership</div>
+      <div style="font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.6rem">Data Stewardship</div>
+      <div style="width:40px;height:2.5px;background:linear-gradient(90deg,#a78bfa,transparent);margin-bottom:.8rem"></div>
+      <div style="font-size:clamp(.88rem,1.4vw,1.05rem);color:rgba(255,255,255,.8);text-align:center;line-height:1.6;margin-bottom:.7rem">One accountable person per data domain.</div>
+      <div style="background:rgba(167,139,250,.09);border:1px solid rgba(167,139,250,.25);border-radius:10px;padding:.65rem 1rem;font-size:clamp(.82rem,1.2vw,.95rem);color:rgba(255,255,255,.65);line-height:1.5;text-align:center;font-style:italic;width:100%">
+        💡 "The CRM Manager owns all customer data."
+      </div>
+    </div>
+
+    <div style="width:1px;background:rgba(255,255,255,.08);flex-shrink:0;margin:2rem 0"></div>
+
+    <!-- COL 3: Enforce Standards -->
+    <div class="rev" style="flex:1;display:flex;flex-direction:column;align-items:center;padding:0 1.2%;position:relative;z-index:2">
+      <div style="position:relative;margin-bottom:1rem">
+        <div style="width:clamp(120px,12vw,150px);height:clamp(120px,12vw,150px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(16,185,129,.38),rgba(6,95,70,.12));border:2.8px solid #10b981;display:flex;align-items:center;justify-content:center;box-shadow:0 0 32px rgba(16,185,129,.3)">
+          <svg width="68" height="64" viewBox="0 0 68 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2"  y="32" width="17" height="30" rx="3" stroke="#10b981" stroke-width="3"/>
+            <rect x="26" y="18" width="17" height="44" rx="3" stroke="#10b981" stroke-width="3"/>
+            <rect x="50" y="6"  width="17" height="56" rx="3" fill="rgba(16,185,129,.18)" stroke="#10b981" stroke-width="3"/>
+            <line x1="0" y1="62" x2="68" y2="62" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="58" cy="12" r="12" fill="rgba(16,185,129,.2)" stroke="#10b981" stroke-width="2.2"/>
+            <path d="M52,12 L57,17 L65,7" stroke="#10b981" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div style="position:absolute;top:-8px;right:-8px;width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#10b981,#047857);display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:15px;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.35)">3</div>
+        <div style="position:absolute;inset:-14px;border-radius:50%;border:1.5px dashed rgba(16,185,129,.22);pointer-events:none"></div>
+      </div>
+      <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(1.05rem,1.9vw,1.5rem);color:#10b981;text-align:center;margin-bottom:.3rem">Enforce Standards</div>
+      <div style="font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.6rem">Data Quality Mgmt</div>
+      <div style="width:40px;height:2.5px;background:linear-gradient(90deg,#10b981,transparent);margin-bottom:.8rem"></div>
+      <div style="font-size:clamp(.88rem,1.4vw,1.05rem);color:rgba(255,255,255,.8);text-align:center;line-height:1.6;margin-bottom:.7rem">Monitors accuracy, completeness &amp; consistency.</div>
+      <div style="background:rgba(16,185,129,.09);border:1px solid rgba(16,185,129,.25);border-radius:10px;padding:.65rem 1rem;font-size:clamp(.82rem,1.2vw,.95rem);color:rgba(255,255,255,.65);line-height:1.5;text-align:center;font-style:italic;width:100%">
+        💡 "Order fields must pass format validation before executed."
+      </div>
+    </div>
+  </div>
+  <div class="z2" style="text-align:center;padding-bottom:3rem;font-size:.8rem;color:rgba(255,255,255,.3);font-style:italic">Data governance is a strategy, not an individual system nor single IT project.</div>
+</div>
+
+<!-- ══ SLIDE 4: THE HOOK ══ -->
+<div class="slide" data-slide="4" style="background:linear-gradient(135deg,#1a3a8f 0%,#1e4db7 50%,#1a4fa8 100%)">
+  <svg class="bg" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="s4b1" cx="50%" cy="50%" r="60%"><stop offset="0%" stop-color="#1a6aff" stop-opacity=".22"/><stop offset="100%" stop-color="#1a3a8f" stop-opacity="0"/></radialGradient>
+      <radialGradient id="s4b2" cx="80%" cy="20%" r="45%"><stop offset="0%" stop-color="#ff9d4d" stop-opacity=".15"/><stop offset="100%" stop-color="#1a3a8f" stop-opacity="0"/></radialGradient>
+      <radialGradient id="s4b3" cx="15%" cy="80%" r="45%"><stop offset="0%" stop-color="#43e8ff" stop-opacity=".14"/><stop offset="100%" stop-color="#1a3a8f" stop-opacity="0"/></radialGradient>
+    </defs>
+    <ellipse cx="720" cy="405" rx="600" ry="380" fill="url(#s4b1)"/>
+    <ellipse cx="1150" cy="180" rx="420" ry="280" fill="url(#s4b2)"/>
+    <ellipse cx="220" cy="650" rx="400" ry="260" fill="url(#s4b3)"/>
+    <path d="M-60,160 Q420,100 900,180 T1500,130" stroke="#43e8ff" stroke-width="1" fill="none" opacity=".12"/>
+    <text x="72%" y="80%" font-family="Arial Black,sans-serif" font-size="340" fill="#fff" opacity=".025" text-anchor="middle">?</text>
+  </svg>
+
+  <div class="z2" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:0 6% 4rem;gap:1.5rem;text-align:center">
+
+    <div class="rev" style="display:inline-flex;align-items:center;gap:.6rem;background:rgba(255,157,77,.1);border:1px solid rgba(255,157,77,.3);border-radius:100px;padding:.4rem 1.4rem">
+      <span style="font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:#ff9d4d;font-weight:600">Scenario · You are the new boss</span>
+    </div>
+
+    <div class="rev">
+      <div style="font-size:clamp(1rem,1.7vw,1.35rem);color:rgba(255,255,255,.6);line-height:1.5;margin-bottom:.7rem">Someone walks in and says…</div>
+      <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(2rem,4vw,3.6rem);color:#fff;line-height:1.1;background:linear-gradient(135deg,#fff 30%,#e0f7fa 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">
+        "Today we sold<br><span style="-webkit-text-fill-color:#ff9d4d">&nbsp;100,000 Toys&nbsp;</span><br>in one hour!"
+      </div>
+    </div>
+
+    <div class="rev">
+      <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(1.3rem,2.4vw,2.2rem);color:#43e8ff">Should you trust this number — or not?</div>
+    </div>
+
+    <!-- TWO BIG CARDS -->
+    <div class="rev" style="display:flex;gap:1.6rem;width:100%;max-width:860px;margin-top:.3rem">
+
+      <div style="flex:1;background:rgba(16,185,129,.1);border:2px solid rgba(16,185,129,.4);border-radius:16px;padding:1.4rem 1.6rem;text-align:left">
+        <div style="font-size:2.2rem;margin-bottom:.55rem">✅</div>
+        <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(1rem,1.7vw,1.3rem);color:#10b981;margin-bottom:.55rem">Trust it — with governance</div>
+        <div style="font-size:clamp(.85rem,1.3vw,1rem);color:rgba(255,255,255,.72);line-height:1.65">
+          Data lineage confirmed · validated at entry<br>
+          Duplicates removed · access-controlled
+        </div>
+      </div>
+
+      <div style="flex:1;background:rgba(255,107,107,.1);border:2px solid rgba(255,107,107,.4);border-radius:16px;padding:1.4rem 1.6rem;text-align:left">
+        <div style="font-size:2.2rem;margin-bottom:.55rem">❌</div>
+        <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(1rem,1.7vw,1.3rem);color:#ff6b6b;margin-bottom:.55rem">Question it — no governance</div>
+        <div style="font-size:clamp(.85rem,1.3vw,1rem);color:rgba(255,255,255,.72);line-height:1.65">
+          No audit trail · undefined "order"<br>
+          Multiple systems · no validation checks
+        </div>
+      </div>
+    </div>
+
+    <div class="rev" style="font-size:.85rem;color:rgba(255,255,255,.35);font-style:italic">
+      1 hour = 3,600 seconds of transactions · every record must be accountable
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 5: GOVERNED DATA = BETTER DECISIONS ══ -->
+<div class="slide" data-slide="5" style="background:linear-gradient(135deg,#1a3a8f 0%,#1e4db7 50%,#1a4fa8 100%)">
+  <svg class="bg" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="s5b1" cx="20%" cy="20%" r="50%"><stop offset="0%" stop-color="#43e8ff" stop-opacity=".18"/><stop offset="100%" stop-color="#1a3a8f" stop-opacity="0"/></radialGradient>
+      <radialGradient id="s5b2" cx="80%" cy="80%" r="48%"><stop offset="0%" stop-color="#10b981" stop-opacity=".16"/><stop offset="100%" stop-color="#1a3a8f" stop-opacity="0"/></radialGradient>
+    </defs>
+    <ellipse cx="240"  cy="180" rx="460" ry="300" fill="url(#s5b1)"/>
+    <ellipse cx="1200" cy="650" rx="440" ry="300" fill="url(#s5b2)"/>
+    <path d="M-60,180 Q420,110 900,190 T1500,140" stroke="#43e8ff" stroke-width="1" fill="none" opacity=".12"/>
+    <path d="M-60,640 Q420,570 900,650 T1500,600" stroke="#10b981" stroke-width="1" fill="none" opacity=".1"/>
+  </svg>
+
+  <!-- FULL SLIDE CONTENT: single flex column, space distributed evenly -->
+  <div class="z2" style="display:flex;flex-direction:column;height:100%;padding:0 2.5% 3.2rem;justify-content:space-evenly">
+
+    <!-- HEADER -->
+    <div class="rev" style="text-align:center;padding:.8rem 0 0">
+      <div class="eyebrow">The Business Case</div>
+      <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(1.5rem,2.6vw,2.3rem);color:#fff;line-height:1.05">
+        Governed Data = <span style="background:linear-gradient(90deg,#43e8ff,#00b8d9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Better Decisions</span> = <span style="background:linear-gradient(90deg,#10b981,#059669);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Better Results</span>
+      </div>
+    </div>
+
+    <!-- FLOW CHAIN -->
+    <div class="rev" style="display:flex;align-items:center;justify-content:center;gap:0">
+
+      <div style="display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:clamp(90px,9vw,120px)">
+        <div style="width:clamp(68px,6.2vw,82px);height:clamp(68px,6.2vw,82px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(67,232,255,.38),rgba(0,119,182,.1));border:2.5px solid #43e8ff;display:flex;align-items:center;justify-content:center;font-size:1.8rem;box-shadow:0 0 20px rgba(67,232,255,.28)">🏛️</div>
+        <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(.72rem,1.1vw,.88rem);color:#43e8ff;text-align:center;line-height:1.2">Governed<br>Data</div>
+      </div>
+      <div style="color:#43e8ff;font-size:1.6rem;opacity:.6;padding-bottom:1.2rem;margin:0 .1rem">›</div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:clamp(90px,9vw,120px)">
+        <div style="width:clamp(68px,6.2vw,82px);height:clamp(68px,6.2vw,82px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(167,139,250,.38),rgba(76,29,149,.1));border:2.5px solid #a78bfa;display:flex;align-items:center;justify-content:center;font-size:1.8rem;box-shadow:0 0 20px rgba(167,139,250,.28)">✅</div>
+        <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(.72rem,1.1vw,.88rem);color:#a78bfa;text-align:center;line-height:1.2">High Quality<br>Data</div>
+      </div>
+      <div style="color:#a78bfa;font-size:1.6rem;opacity:.6;padding-bottom:1.2rem;margin:0 .1rem">›</div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:clamp(90px,9vw,120px)">
+        <div style="width:clamp(68px,6.2vw,82px);height:clamp(68px,6.2vw,82px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(251,191,36,.38),rgba(146,64,14,.1));border:2.5px solid #fbbf24;display:flex;align-items:center;justify-content:center;font-size:1.8rem;box-shadow:0 0 20px rgba(251,191,36,.28)">🔒</div>
+        <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(.72rem,1.1vw,.88rem);color:#fbbf24;text-align:center;line-height:1.2">Trusted<br>Data</div>
+      </div>
+      <div style="color:#fbbf24;font-size:1.6rem;opacity:.6;padding-bottom:1.2rem;margin:0 .1rem">›</div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:clamp(90px,9vw,120px)">
+        <div style="width:clamp(68px,6.2vw,82px);height:clamp(68px,6.2vw,82px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(255,157,77,.38),rgba(180,83,9,.1));border:2.5px solid #ff9d4d;display:flex;align-items:center;justify-content:center;font-size:1.8rem;box-shadow:0 0 20px rgba(255,157,77,.28)">⏱️</div>
+        <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(.72rem,1.1vw,.88rem);color:#ff9d4d;text-align:center;line-height:1.2">Time<br>Saved</div>
+      </div>
+      <div style="color:#ff9d4d;font-size:1.6rem;opacity:.6;padding-bottom:1.2rem;margin:0 .1rem">›</div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:clamp(90px,9vw,120px)">
+        <div style="width:clamp(68px,6.2vw,82px);height:clamp(68px,6.2vw,82px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(236,72,153,.38),rgba(131,24,67,.1));border:2.5px solid #ec4899;display:flex;align-items:center;justify-content:center;font-size:1.8rem;box-shadow:0 0 20px rgba(236,72,153,.28)">💡</div>
+        <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(.72rem,1.1vw,.88rem);color:#ec4899;text-align:center;line-height:1.2">Valuable<br>Insights</div>
+      </div>
+      <div style="color:#ec4899;font-size:1.6rem;opacity:.6;padding-bottom:1.2rem;margin:0 .1rem">›</div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:clamp(90px,9vw,120px)">
+        <div style="width:clamp(68px,6.2vw,82px);height:clamp(68px,6.2vw,82px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(16,185,129,.38),rgba(6,95,70,.1));border:2.5px solid #10b981;display:flex;align-items:center;justify-content:center;font-size:1.8rem;box-shadow:0 0 20px rgba(16,185,129,.28)">🎯</div>
+        <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(.72rem,1.1vw,.88rem);color:#10b981;text-align:center;line-height:1.2">Better<br>Decisions</div>
+      </div>
+      <div style="color:#10b981;font-size:1.6rem;opacity:.6;padding-bottom:1.2rem;margin:0 .1rem">›</div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:clamp(90px,9vw,120px)">
+        <div style="width:clamp(74px,6.8vw,90px);height:clamp(74px,6.8vw,90px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(34,211,238,.42),rgba(14,116,144,.14));border:3px solid #22d3ee;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 0 26px rgba(34,211,238,.35)">🚀</div>
+        <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(.72rem,1.1vw,.88rem);color:#22d3ee;text-align:center;line-height:1.2">Better<br>Results</div>
+      </div>
+    </div>
+
+    <!-- 3 EXAMPLE CARDS -->
+    <div class="rev" style="display:flex;gap:1.2rem">
+
+      <div style="flex:1;background:rgba(67,232,255,.08);border:1.5px solid rgba(67,232,255,.25);border-radius:14px;padding:.85rem 1.1rem;border-left:4px solid #43e8ff">
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.35rem">
+          <span style="font-size:1.3rem">🛍️</span>
+          <span style="font-family:'Archivo Black',sans-serif;font-size:clamp(.9rem,1.4vw,1.1rem);color:#43e8ff">Accurate Segments</span>
+        </div>
+        <div style="font-size:clamp(.82rem,1.2vw,.95rem);color:rgba(255,255,255,.72);line-height:1.55">Governed customer data → correct audience →<br><strong style="color:#fff">no wasted ad spend</strong></div>
+      </div>
+
+      <div style="flex:1;background:rgba(167,139,250,.08);border:1.5px solid rgba(167,139,250,.25);border-radius:14px;padding:.85rem 1.1rem;border-left:4px solid #a78bfa">
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.35rem">
+          <span style="font-size:1.3rem">📦</span>
+          <span style="font-family:'Archivo Black',sans-serif;font-size:clamp(.9rem,1.4vw,1.1rem);color:#a78bfa">Faster Go-to-Market</span>
+        </div>
+        <div style="font-size:clamp(.82rem,1.2vw,.95rem);color:rgba(255,255,255,.72);line-height:1.55">Trusted inventory data → skip manual checks →<br><strong style="color:#fff">launch campaigns quicker</strong></div>
+      </div>
+
+      <div style="flex:1;background:rgba(16,185,129,.08);border:1.5px solid rgba(16,185,129,.25);border-radius:14px;padding:.85rem 1.1rem;border-left:4px solid #10b981">
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.35rem">
+          <span style="font-size:1.3rem">💰</span>
+          <span style="font-family:'Archivo Black',sans-serif;font-size:clamp(.9rem,1.4vw,1.1rem);color:#10b981">Smarter Pricing</span>
+        </div>
+        <div style="font-size:clamp(.82rem,1.2vw,.95rem);color:rgba(255,255,255,.72);line-height:1.55">Reliable order data → clear sales trends →<br><strong style="color:#fff">confident restocking &amp; pricing</strong></div>
+      </div>
+
+    </div>
+
+  </div><!-- /full content -->
+</div>
+
+<!-- ══ SLIDE 6: POLICY & PROCESS ══ -->
+<div class="slide" data-slide="6" style="background:linear-gradient(135deg,#1a3a8f 0%,#1e4db7 50%,#1a4fa8 100%)">
+  <svg class="bg" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="s6b1" cx="80%" cy="20%" r="52%"><stop offset="0%" stop-color="#43e8ff" stop-opacity=".16"/><stop offset="100%" stop-color="#1a3a8f" stop-opacity="0"/></radialGradient>
+      <radialGradient id="s6b2" cx="15%" cy="80%" r="48%"><stop offset="0%" stop-color="#a78bfa" stop-opacity=".14"/><stop offset="100%" stop-color="#1a3a8f" stop-opacity="0"/></radialGradient>
+    </defs>
+    <ellipse cx="1160" cy="160" rx="500" ry="300" fill="url(#s6b1)"/>
+    <ellipse cx="220"  cy="660" rx="420" ry="280" fill="url(#s6b2)"/>
+    <path d="M-60,160 Q420,100 900,180 T1500,130" stroke="#43e8ff" stroke-width="1" fill="none" opacity=".12"/>
+    <path d="M-60,650 Q420,580 900,660 T1500,610" stroke="#a78bfa" stroke-width=".8" fill="none" opacity=".1"/>
+  </svg>
+
+  <!-- HEADER -->
+  <div class="z2 rev" style="text-align:center;padding:1.6rem 1rem .5rem">
+    <div class="eyebrow">Why Data Governance &amp; Standardisation Matter</div>
+    <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(1.6rem,2.8vw,2.5rem);color:#fff;line-height:1.05">
+      Data Governance <span style="background:linear-gradient(90deg,#43e8ff,#00b8d9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Policy &amp; Process</span>
+    </div>
+    <div style="font-size:.9rem;color:rgba(255,255,255,.45);margin-top:.3rem">Completeness · Accuracy · Consistency</div>
+  </div>
+
+  <!-- MAIN BODY: left badge + right 4 pillars -->
+  <div class="z2" style="display:flex;gap:2rem;padding:.5rem 3% 3.5rem;flex:1;align-items:stretch">
+
+    <!-- LEFT: Trust shield -->
+    <div class="rev" style="width:34%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.3rem">
+      <svg width="180" height="192" viewBox="0 0 180 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="shg2" cx="38%" cy="28%" r="72%"><stop offset="0%" stop-color="#43e8ff" stop-opacity=".30"/><stop offset="100%" stop-color="#1a6aff" stop-opacity=".06"/></radialGradient>
+        </defs>
+        <path d="M90,12 L166,48 L166,108 Q166,156 90,182 Q14,156 14,108 L14,48 Z" fill="url(#shg2)" stroke="#43e8ff" stroke-width="3"/>
+        <path d="M90,26 L152,57 L152,105 Q152,146 90,166 Q28,146 28,105 L28,57 Z" fill="none" stroke="#43e8ff" stroke-width="1.2" opacity=".28"/>
+        <path d="M54,100 L76,124 L128,72" stroke="#43e8ff" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div style="text-align:center">
+        <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(1rem,1.7vw,1.3rem);color:#43e8ff;margin-bottom:.35rem">Trusted &amp; Accountable</div>
+        <div style="font-size:clamp(.84rem,1.3vw,1rem);color:rgba(255,255,255,.55);line-height:1.55;max-width:220px">Every record has a verified source,<br>owner, and validation trail.</div>
+      </div>
+      <div style="background:rgba(67,232,255,.09);border:1px solid rgba(67,232,255,.24);border-radius:10px;padding:.6rem 1rem;font-size:clamp(.82rem,1.2vw,.95rem);color:rgba(255,255,255,.58);text-align:center;font-style:italic;max-width:240px">"One definition of 'order'<br>used company-wide."</div>
+    </div>
+
+    <!-- RIGHT: 4 pillars — big readable text -->
+    <div class="rev" style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:1rem">
+
+      <div style="display:flex;align-items:flex-start;gap:1rem;background:rgba(67,232,255,.08);border:1.5px solid rgba(67,232,255,.22);border-radius:14px;padding:1rem 1.3rem;border-left:4px solid #43e8ff">
+        <div style="font-size:1.9rem;flex-shrink:0">🔍</div>
+        <div>
+          <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(.95rem,1.6vw,1.2rem);color:#43e8ff;margin-bottom:.25rem">Data Lineage</div>
+          <div style="font-size:clamp(.85rem,1.3vw,1rem);color:rgba(255,255,255,.72);line-height:1.55">We know exactly which system recorded every order — full audit trail from source to report.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:flex-start;gap:1rem;background:rgba(167,139,250,.08);border:1.5px solid rgba(167,139,250,.22);border-radius:14px;padding:1rem 1.3rem;border-left:4px solid #a78bfa">
+        <div style="font-size:1.9rem;flex-shrink:0">📊</div>
+        <div>
+          <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(.95rem,1.6vw,1.2rem);color:#a78bfa;margin-bottom:.25rem">Data Quality Standards</div>
+          <div style="font-size:clamp(.85rem,1.3vw,1rem);color:rgba(255,255,255,.72);line-height:1.55">Validated at point of entry, duplicates removed — accuracy &amp; completeness enforced before use.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:flex-start;gap:1rem;background:rgba(251,191,36,.08);border:1.5px solid rgba(251,191,36,.22);border-radius:14px;padding:1rem 1.3rem;border-left:4px solid #fbbf24">
+        <div style="font-size:1.9rem;flex-shrink:0">🔐</div>
+        <div>
+          <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(.95rem,1.6vw,1.2rem);color:#fbbf24;margin-bottom:.25rem">Access Control</div>
+          <div style="font-size:clamp(.85rem,1.3vw,1rem);color:rgba(255,255,255,.72);line-height:1.55">Only authorised roles can write to a dataset — preventing unauthorised changes or corruption.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:flex-start;gap:1rem;background:rgba(16,185,129,.08);border:1.5px solid rgba(16,185,129,.22);border-radius:14px;padding:1rem 1.3rem;border-left:4px solid #10b981">
+        <div style="font-size:1.9rem;flex-shrink:0">📐</div>
+        <div>
+          <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(.95rem,1.6vw,1.2rem);color:#10b981;margin-bottom:.25rem">Data Standardisation</div>
+          <div style="font-size:clamp(.85rem,1.3vw,1rem);color:rgba(255,255,255,.72);line-height:1.55">One agreed definition of every key term company-wide — no more conflicting figures across teams.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 7: THANK YOU ══ -->
+<div class="slide" data-slide="7" style="background:linear-gradient(135deg,#1a3a8f 0%,#1e4db7 50%,#1a4fa8 100%)">
+  <svg class="bg" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="s7b1" cx="50%" cy="50%" r="65%"><stop offset="0%" stop-color="#1a6aff" stop-opacity=".25"/><stop offset="100%" stop-color="#1a3a8f" stop-opacity="0"/></radialGradient>
+      <radialGradient id="s7b2" cx="80%" cy="20%" r="45%"><stop offset="0%" stop-color="#43e8ff" stop-opacity=".18"/><stop offset="100%" stop-color="#1a3a8f" stop-opacity="0"/></radialGradient>
+      <radialGradient id="s7b3" cx="15%" cy="80%" r="45%"><stop offset="0%" stop-color="#a78bfa" stop-opacity=".14"/><stop offset="100%" stop-color="#1a3a8f" stop-opacity="0"/></radialGradient>
+    </defs>
+    <ellipse cx="720"  cy="405" rx="640" ry="400" fill="url(#s7b1)"/>
+    <ellipse cx="1160" cy="160" rx="460" ry="300" fill="url(#s7b2)"/>
+    <ellipse cx="220"  cy="660" rx="420" ry="280" fill="url(#s7b3)"/>
+    <!-- diagonal accent like slide 1 -->
+    <polygon points="0,810 280,0 310,0 30,810" fill="#43e8ff" opacity=".06"/>
+    <polygon points="1130,0 1440,0 1440,810 1160,810" fill="#1a6aff" opacity=".07"/>
+    <path d="M1130,0 L1440,810" stroke="#43e8ff" stroke-width="1" opacity=".18"/>
+    <path d="M-60,180 Q420,110 900,190 T1500,140" stroke="#43e8ff" stroke-width="1" fill="none" opacity=".12"/>
+    <path d="M-60,640 Q420,570 900,650 T1500,600" stroke="#a78bfa" stroke-width=".8" fill="none" opacity=".1"/>
+    <!-- dot grid top-right -->
+    <g fill="#fff" opacity=".12">
+      <circle cx="1340" cy="80" r="2"/><circle cx="1376" cy="80" r="2"/><circle cx="1412" cy="80" r="2"/>
+      <circle cx="1340" cy="116" r="2"/><circle cx="1376" cy="116" r="2"/><circle cx="1412" cy="116" r="2"/>
+      <circle cx="1340" cy="152" r="2"/><circle cx="1376" cy="152" r="2"/>
+    </g>
+  </svg>
+
+  <!-- CONTENT: centred -->
+  <div class="z2" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:0 6% 4rem;gap:1.6rem;text-align:center">
+
+    <!-- eyebrow -->
+    <div class="rev" style="font-size:.66rem;letter-spacing:.26em;text-transform:uppercase;color:#43e8ff">Data Governance · Eric Fong</div>
+
+    <!-- main message -->
+    <div class="rev">
+      <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(3rem,6vw,5.8rem);color:#fff;line-height:.92;letter-spacing:-.02em">
+        Thank you for<br>your <span style="background:linear-gradient(90deg,#43e8ff,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Attention</span>!
+      </div>
+    </div>
+
+    <!-- key takeaway -->
+    <div class="rev" style="max-width:620px;margin-top:.4rem">
+      <div style="font-size:clamp(.85rem,1.4vw,1.1rem);color:rgba(255,255,255,.65);line-height:1.65;font-style:italic">"Data Governance is the foundation that turns raw numbers into decisions you can actually trust — every order, every hour, every day."</div>
+    </div>
+
+    <!-- 3 recap pills -->
+    <div class="rev" style="display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center;margin-top:.3rem">
+      <span class="pill" style="color:#43e8ff;border-color:rgba(67,232,255,.35);background:rgba(67,232,255,.09);padding:.4rem 1.1rem;font-size:.72rem">🎯 Set the Rules</span>
+      <span class="pill" style="color:#a78bfa;border-color:rgba(167,139,250,.35);background:rgba(167,139,250,.09);padding:.4rem 1.1rem;font-size:.72rem">👤 Assign Ownership</span>
+      <span class="pill" style="color:#10b981;border-color:rgba(16,185,129,.35);background:rgba(16,185,129,.09);padding:.4rem 1.1rem;font-size:.72rem">📋 Enforce Standards</span>
+    </div>
+
+    <!-- horizontal rule -->
+    <div class="rev" style="width:clamp(200px,40%,420px);height:1px;background:linear-gradient(90deg,transparent,rgba(67,232,255,.4),transparent);margin-top:.4rem"></div>
+
+    <!-- name + closing -->
+    <div class="rev" style="font-size:.88rem;color:rgba(255,255,255,.45);letter-spacing:.06em">
+      Presented by <strong style="color:rgba(255,255,255,.7)">Eric Fong</strong>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<!-- NAV -->
+<div class="nav">
+  <button onclick="go(-1)">&#8249;</button>
+  <div class="dots" id="dots"></div>
+  <button onclick="go(1)">&#8250;</button>
+  <span class="nc" id="nc">1 / 7</span>
+</div>
+
+<style>
+/* hex hover */
+.hex-g{transition:filter .25s,transform .25s;transform-box:fill-box;transform-origin:center;cursor:pointer}
+.hex-g:hover{filter:brightness(1.4) drop-shadow(0 0 10px rgba(255,255,255,.3));transform:scale(1.06)}
+</style>
+
+<script>
+let cur=1;
+const slides=document.querySelectorAll('.slide');
+const total=slides.length;
+const dotsEl=document.getElementById('dots');
+const nc=document.getElementById('nc');
+for(let i=1;i<=total;i++){
+  const d=document.createElement('div');
+  d.className='dot'+(i===1?' active':'');
+  d.onclick=()=>jump(i);
+  dotsEl.appendChild(d);
+}
+function jump(n){
+  slides.forEach(s=>s.classList.remove('active'));
+  const sl=document.querySelector('[data-slide="'+n+'"]');
+  if(sl){sl.classList.add('active');animate(sl);}
+  cur=n;
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i+1===n));
+  nc.textContent=n+' / '+total;
+}
+function go(d){let n=cur+d;if(n<1)n=total;if(n>total)n=1;jump(n);}
+function animate(sl){
+  sl.querySelectorAll('.rev').forEach((el,i)=>{
+    el.style.transition='none';el.style.opacity='0';el.style.transform='translateY(18px)';
+    el.offsetHeight;
+    const delay=i*0.09;
+    el.style.transition=`opacity .5s ease ${delay}s,transform .5s ease ${delay}s`;
+    el.style.opacity='1';el.style.transform='translateY(0)';
+  });
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(1);}
+  if(e.key==='ArrowLeft'){e.preventDefault();go(-1);}
+});
+let tx=0;
+document.addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+document.addEventListener('touchend',e=>{const d=tx-e.changedTouches[0].clientX;if(Math.abs(d)>50)go(d>0?1:-1);});
+animate(document.querySelector('.slide.active'));
+</script>
+</body>
+</html>
