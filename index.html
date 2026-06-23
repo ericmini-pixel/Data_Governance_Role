@@ -114,47 +114,102 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-famil
   .slide { padding-bottom: 1.5rem; }
 }
 
+
 @media (max-width: 767px) {
-  /* Slide 1: left/right panels stack */
+
+  /* ── Slide 1: panels stack, no border ── */
   [style*="width:47%"], [style*="width:53%"] {
     width: 100% !important;
     border-left: none !important;
-    padding: 1.5rem 5% !important;
+    border-right: none !important;
+    padding: 1.5rem 6% !important;
   }
 
-  /* Slide 5: flow chain wraps to 2 rows */
-  [style*="min-width:clamp(90px"] {
-    min-width: 80px !important;
+  /* ── Slide 2 honeycomb ── */
+  [style*="width:min(680px"] {
+    width: 96vw !important;
+    max-height: 52vh !important;
   }
 
-  /* Slide 6: left/right split stacks */
-  [style*="width:34%"] {
+  /* ── Slide 3: 3 columns → each becomes a horizontal row (icon left, text right) ── */
+  #s3 [style*="flex:1;display:flex;flex-direction:column;align-items:center"] {
+    flex-direction: row !important;
+    align-items: flex-start !important;
     width: 100% !important;
-    padding: 1.5rem 5% !important;
-  }
-
-  /* Slide 2 honeycomb: shrink to fit */
-  [viewBox="185 -65 610 690"] {
-    width: 100% !important;
-    max-height: 55vh !important;
-  }
-
-  /* All 3-column rows: stack on mobile */
-  [style*="flex:1;display:flex;flex-direction:column;align-items:center;padding:0 1.2%"] {
-    min-width: 100% !important;
-    padding: 1rem 5% !important;
+    padding: .9rem 5% !important;
     border-left: none !important;
-    border-top: 1px solid rgba(255,255,255,.08) !important;
+    border-top: 1px solid rgba(255,255,255,.07) !important;
+    gap: 1rem !important;
   }
-
-  /* Slide 4 two cards: stack */
-  [style*="max-width:860px"] {
+  /* circle icon keeps its size, text block fills right */
+  #s3 [style*="position:relative;margin-bottom:1rem"] {
+    flex-shrink: 0 !important;
+    margin-bottom: 0 !important;
+  }
+  /* hide outer dashed ring on mobile to save space */
+  #s3 [style*="position:absolute;inset:-14px"] { display: none !important; }
+  /* text block fills remaining width */
+  #s3 [style*="width:40px;height:2.5px"] { display: none !important; }
+  /* dividers between columns: hidden */
+  #s3 [style*="width:1px;background:rgba(255,255,255,.08)"] { display: none !important; }
+  /* flow arrow SVG: hide on mobile */
+  #s3 svg[style*="position:absolute;top:72px"] { display: none !important; }
+  /* columns container: wrap */
+  #s3 [style*="flex:1;display:flex;align-items:stretch;padding"] {
     flex-direction: column !important;
+    gap: 0 !important;
   }
 
-  /* reduce big headline fonts on mobile */
-  [style*="font-size:clamp(3rem"] { font-size: 2.2rem !important; }
-  [style*="font-size:clamp(3.5rem"] { font-size: 2rem !important; }
+  /* ── Slide 4: cards stack ── */
+  #s4 [style*="max-width:860px"] { flex-direction: column !important; }
+
+  /* ── Slide 5: flow chain wraps, cards stack like pillars ── */
+  #s5 [style*="display:flex;align-items:center;justify-content:center;padding:1.8rem"] {
+    flex-wrap: wrap !important;
+    gap: .4rem .2rem !important;
+    justify-content: center !important;
+  }
+  #s5 [style*="min-width:clamp(90px"] {
+    min-width: 72px !important;
+    max-width: 90px !important;
+  }
+  /* cards: stack vertically, each row = icon+title left, text right */
+  #s5 [style*="display:flex;gap:1.2rem"] {
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+  #s5 [style*="border-left:4px solid #43e8ff"],
+  #s5 [style*="border-left:4px solid #a78bfa"],
+  #s5 [style*="border-left:4px solid #10b981"] {
+    border-radius: 0 !important;
+    border-bottom: 1px solid rgba(255,255,255,.07) !important;
+    padding: .8rem 5% !important;
+  }
+  #s5 [style*="display:flex;align-items:center;gap:.5rem"] {
+    margin-bottom: .25rem !important;
+  }
+
+  /* ── Slide 6: already stacks well, minor padding tweak ── */
+  #s6 [style*="width:34%"] {
+    width: 100% !important;
+    padding: 1rem 5% !important;
+  }
+  #s6 [style*="display:flex;gap:2rem"] {
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+  #s6 [style*="border-left:4px solid #43e8ff"],
+  #s6 [style*="border-left:4px solid #a78bfa"],
+  #s6 [style*="border-left:4px solid #fbbf24"],
+  #s6 [style*="border-left:4px solid #10b981"] {
+    border-radius: 0 !important;
+    border-bottom: 1px solid rgba(255,255,255,.07) !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* ── Global: reduce big display fonts ── */
+  [style*="font-size:clamp(3.5rem"] { font-size: 2.2rem !important; }
+  [style*="font-size:clamp(3rem"]   { font-size: 2rem !important; }
   [style*="font-size:clamp(2rem,4vw"] { font-size: 1.8rem !important; }
 }
 
@@ -190,6 +245,25 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-famil
   <!-- SPLIT BODY -->
   <div style="display:flex;width:100%;height:100%">
 
+    <!-- RIGHT: Title -->
+    <div style="width:53%;display:flex;flex-direction:column;justify-content:center;padding:5% 5% 5% 4%;border-right:1.5px solid rgba(255,255,255,.12);position:relative;z-index:2;gap:1.2rem">
+      <p class="rev" style="font-size:clamp(.85rem,1.3vw,1.1rem);font-style:italic;color:rgba(255,255,255,.7);line-height:1.6;padding-left:1rem;border-left:3px solid #43e8ff;max-width:500px">"Can you trust every single data point behind that?"</p>
+
+      <div class="rev">
+        <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(3rem,5.8vw,5.6rem);color:#fff;line-height:.9;letter-spacing:-.01em">DATA<br><span style="background:linear-gradient(90deg,#43e8ff,#00b8d9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">GOVERNANCE</span></div>
+      </div>
+
+      <div class="rev" style="font-size:clamp(.78rem,1.15vw,.98rem);letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.42)">The Business Function Behind Reliable Data</div>
+
+      <div class="rev" style="display:flex;gap:.6rem;flex-wrap:wrap">
+        <span class="pill" style="color:#43e8ff;border-color:rgba(67,232,255,.35);background:rgba(67,232,255,.08)">Accuracy</span>
+        <span class="pill" style="color:#ff9d4d;border-color:rgba(255,157,77,.35);background:rgba(255,157,77,.08)">Integrity</span>
+        <span class="pill" style="color:#a78bfa;border-color:rgba(167,139,250,.35);background:rgba(167,139,250,.08)">Accountability</span>
+        <span class="pill" style="color:rgba(255,255,255,.6);border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.05)">Compliance</span>
+      </div>
+
+      <div class="rev" style="font-size:.78rem;color:rgba(255,255,255,.3);margin-top:.4rem;font-style:italic">Presented by Eric Fong</div>
+    </div>
     <!-- LEFT: Big numbers -->
     <div style="width:47%;display:flex;flex-direction:column;justify-content:center;padding:5% 4% 5% 10%;gap:2rem;position:relative;z-index:2">
 
@@ -216,25 +290,6 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-famil
       </div>
     </div>
 
-    <!-- RIGHT: Title -->
-    <div style="width:53%;display:flex;flex-direction:column;justify-content:center;padding:5% 5% 5% 4%;border-left:1.5px solid rgba(255,255,255,.12);position:relative;z-index:2;gap:1.2rem">
-      <p class="rev" style="font-size:clamp(.85rem,1.3vw,1.1rem);font-style:italic;color:rgba(255,255,255,.7);line-height:1.6;padding-left:1rem;border-left:3px solid #43e8ff;max-width:500px">"Can you trust every single data point behind that?"</p>
-
-      <div class="rev">
-        <div style="font-family:'Archivo Black',sans-serif;font-size:clamp(3rem,5.8vw,5.6rem);color:#fff;line-height:.9;letter-spacing:-.01em">DATA<br><span style="background:linear-gradient(90deg,#43e8ff,#00b8d9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">GOVERNANCE</span></div>
-      </div>
-
-      <div class="rev" style="font-size:clamp(.78rem,1.15vw,.98rem);letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.42)">The Business Function Behind Reliable Data</div>
-
-      <div class="rev" style="display:flex;gap:.6rem;flex-wrap:wrap">
-        <span class="pill" style="color:#43e8ff;border-color:rgba(67,232,255,.35);background:rgba(67,232,255,.08)">Accuracy</span>
-        <span class="pill" style="color:#ff9d4d;border-color:rgba(255,157,77,.35);background:rgba(255,157,77,.08)">Integrity</span>
-        <span class="pill" style="color:#a78bfa;border-color:rgba(167,139,250,.35);background:rgba(167,139,250,.08)">Accountability</span>
-        <span class="pill" style="color:rgba(255,255,255,.6);border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.05)">Compliance</span>
-      </div>
-
-      <div class="rev" style="font-size:.78rem;color:rgba(255,255,255,.3);margin-top:.4rem;font-style:italic">Presented by Eric Fong</div>
-    </div>
   </div>
 </div>
 
@@ -352,7 +407,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-famil
 </div>
 
 <!-- ══ SLIDE 3: WHAT IS DATA GOVERNANCE ══ -->
-<div class="slide" data-slide="3" style="background:linear-gradient(135deg,#1a3a8f 0%,#1e4db7 50%,#1a4fa8 100%)">
+<div class="slide" id="s3" data-slide="3" style="background:linear-gradient(135deg,#1a3a8f 0%,#1e4db7 50%,#1a4fa8 100%)">
   <svg class="bg" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <radialGradient id="s3b1" cx="15%" cy="20%" r="50%"><stop offset="0%" stop-color="#43e8ff" stop-opacity=".18"/><stop offset="100%" stop-color="#1a3a8f" stop-opacity="0"/></radialGradient>
@@ -483,7 +538,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-famil
 </div>
 
 <!-- ══ SLIDE 4: THE HOOK ══ -->
-<div class="slide" data-slide="4" style="background:linear-gradient(135deg,#1a3a8f 0%,#1e4db7 50%,#1a4fa8 100%)">
+<div class="slide" id="s4" data-slide="4" style="background:linear-gradient(135deg,#1a3a8f 0%,#1e4db7 50%,#1a4fa8 100%)">
   <svg class="bg" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <radialGradient id="s4b1" cx="50%" cy="50%" r="60%"><stop offset="0%" stop-color="#1a6aff" stop-opacity=".22"/><stop offset="100%" stop-color="#1a3a8f" stop-opacity="0"/></radialGradient>
@@ -543,7 +598,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-famil
 </div>
 
 <!-- ══ SLIDE 5: GOVERNED DATA = BETTER DECISIONS ══ -->
-<div class="slide" data-slide="5" style="background:linear-gradient(135deg,#1a3a8f 0%,#1e4db7 50%,#1a4fa8 100%)">
+<div class="slide" id="s5" data-slide="5" style="background:linear-gradient(135deg,#1a3a8f 0%,#1e4db7 50%,#1a4fa8 100%)">
   <svg class="bg" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <radialGradient id="s5b1" cx="20%" cy="20%" r="50%"><stop offset="0%" stop-color="#43e8ff" stop-opacity=".18"/><stop offset="100%" stop-color="#1a3a8f" stop-opacity="0"/></radialGradient>
@@ -644,7 +699,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#1a3a8f;font-famil
 </div>
 
 <!-- ══ SLIDE 6: POLICY & PROCESS ══ -->
-<div class="slide" data-slide="6" style="background:linear-gradient(135deg,#1a3a8f 0%,#1e4db7 50%,#1a4fa8 100%)">
+<div class="slide" id="s6" data-slide="6" style="background:linear-gradient(135deg,#1a3a8f 0%,#1e4db7 50%,#1a4fa8 100%)">
   <svg class="bg" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <radialGradient id="s6b1" cx="80%" cy="20%" r="52%"><stop offset="0%" stop-color="#43e8ff" stop-opacity=".16"/><stop offset="100%" stop-color="#1a3a8f" stop-opacity="0"/></radialGradient>
