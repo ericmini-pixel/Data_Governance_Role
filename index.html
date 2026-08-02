@@ -60,6 +60,119 @@
     @media(max-width:900px){.hero{grid-template-columns:1fr;padding-bottom:60px}.hero-panel{max-width:540px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.experience,.contact{grid-template-columns:1fr}.section-head{grid-template-columns:1fr}}
     @media(max-width:680px){.org-strip{grid-template-columns:repeat(2,minmax(0,1fr));padding-left:0;gap:10px}.org-badge{min-height:68px;font-size:.94rem;padding:10px 8px}.timeline{padding:24px 20px}.wrap,.nav-inner,footer{width:min(92%,var(--max))}.menu-btn{display:block}.nav-links{display:none;position:absolute;top:72px;left:0;right:0;padding:16px 4%;background:rgba(248,253,255,.98);border-bottom:1px solid var(--line);flex-direction:column;align-items:flex-start;gap:12px}.nav-links.open{display:flex}.section{padding:72px 0}.grid,.skills{grid-template-columns:1fr}h1{font-size:clamp(2.7rem,15vw,4.3rem)}footer{flex-direction:column}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}#data-canvas{display:none}}
+ 
+  .case-study-link {
+    position: relative;
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr) 34px;
+    align-items: center;
+    gap: 13px;
+    margin: 20px 6px 4px;
+    padding: 13px 14px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 191, 179, .34);
+    border-radius: 16px;
+    background:
+      linear-gradient(
+        135deg,
+        rgba(0, 191, 179, .12),
+        rgba(52, 120, 246, .12)
+      );
+    color: var(--text);
+    text-decoration: none;
+    box-shadow:
+      0 12px 28px rgba(52, 120, 246, .10),
+      inset 0 1px 0 rgba(255, 255, 255, .75);
+    transition:
+      transform .22s ease,
+      border-color .22s ease,
+      box-shadow .22s ease;
+  }
+  
+  .case-study-link::before {
+    content: "";
+    position: absolute;
+    top: -70px;
+    right: -45px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(0, 191, 179, .23),
+      transparent 68%
+    );
+    pointer-events: none;
+  }
+  
+  .case-study-link:hover,
+  .case-study-link:focus-visible {
+    transform: translateY(-4px);
+    border-color: rgba(0, 191, 179, .75);
+    box-shadow:
+      0 18px 36px rgba(52, 120, 246, .18),
+      0 0 0 4px rgba(0, 191, 179, .09);
+    outline: none;
+  }
+  
+  .case-study-icon {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #00bfb3, #3478f6);
+    color: #fff;
+    font-size: .78rem;
+    font-weight: 900;
+    letter-spacing: .08em;
+    box-shadow: 0 8px 20px rgba(0, 191, 179, .22);
+  }
+  
+  .case-study-copy {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+  
+  .case-study-copy strong {
+    color: var(--text);
+    font-size: .9rem;
+    line-height: 1.3;
+  }
+  
+  .case-study-copy small {
+    color: var(--muted);
+    font-size: .72rem;
+    line-height: 1.35;
+  }
+  
+  .case-study-arrow {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .82);
+    color: #00a99d;
+    font-size: 1.15rem;
+    font-weight: 900;
+    transition:
+      transform .22s ease,
+      background .22s ease;
+  }
+  
+  .case-study-link:hover .case-study-arrow,
+  .case-study-link:focus-visible .case-study-arrow {
+    transform: translateX(4px);
+    background: #fff;
+  }
   </style>
 </head>
 <body>
@@ -83,8 +196,15 @@
 <g class="float2"><rect x="205" y="64" width="72" height="82" rx="9" fill="#fff" stroke="#7e57ff" stroke-width="3"/><path d="M220 129V109M240 129V85M261 129V97" stroke="#ff8e4f" stroke-width="8"/><path d="M216 137h49" stroke="#9ab0c3" stroke-width="3"/></g>
 <g><circle cx="344" cy="83" r="31" fill="#dceffd"/><circle cx="344" cy="76" r="14" fill="#e8aa7c"/><path d="M328 73c2-17 29-19 33 0l-6-4-5-9-6 8-10 3z" fill="#423833"/><path d="M319 137c0-27 11-40 25-40s25 13 25 40v18h-50z" fill="#3478f6" stroke="#1767d2" stroke-width="3"/><path d="M310 114l-20-8M375 114l20-8" stroke="#7e57ff" stroke-width="3"/><circle cx="286" cy="104" r="5" fill="#7e57ff"/><circle cx="399" cy="104" r="5" fill="#7e57ff"/></g></svg></div><h3>Data Governance & Systems Support</h3><div class="meta">Hasbro Asia Pacific Marketing Ltd.</div><p>Coordinated operational evidence across Commerce, IT and Finance, maintained data integrity and compliance registers, supported audits and system updates across SAP, ERP and EDW SQL.</p>
 
-<a class="btn btn-secondary" href="data-governance.html">
-  Explore data governance case study →
+<a class="case-study-link" href="data-governance.html">
+  <span class="case-study-icon" aria-hidden="true">DG</span>
+
+  <span class="case-study-copy">
+    <strong>Explore data governance case study</strong>
+    <small>Interactive 7-part visual presentation</small>
+  </span>
+
+  <span class="case-study-arrow" aria-hidden="true">→</span>
 </a>
 </article>
       <article class="card has-visual"><div class="visual"><span class="visual-label">People + Marketing + Product + Growth</span><svg viewBox="0 0 420 208" aria-label="Two people discuss marketing, shopping products and sales growth" role="img"><g fill="none" stroke="#3478f6" stroke-width="3" class="flow"><path d="M100 114h23M208 114h22M319 114h17"/></g>
